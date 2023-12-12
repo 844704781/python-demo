@@ -4029,3 +4029,308 @@ mul(1, a=1) #TypeError: mul() got multiple values for argument 'a'
 
 
 
+#### 参数类型
+
+函数在调用时，解析器不会检查实参的类型
+
+实参可以传递任意类型的对象，包括函数
+
+```python
+def speak(obj):
+    print("id:", id(obj))
+    print("type:", type(obj))
+    print("value:", obj)
+    print("-" * 20)
+
+
+# 整数
+speak(1)
+'''
+id: 4394055984
+type: <class 'int'>
+value: 1
+'''
+# 浮点
+_f = 1.11
+speak(1.11)
+'''
+id: 4394742736
+type: <class 'float'>
+value: 1.11
+'''
+# bool
+speak(True)
+'''
+id: 4400375056
+type: <class 'bool'>
+value: True
+'''
+# str
+speak("hello")
+'''
+id: 4396129648
+type: <class 'str'>
+value: hello
+'''
+# None
+speak(None)
+'''
+id: 4400454608
+type: <class 'NoneType'>
+value: None
+'''
+```
+
+
+
+##### 回调函数
+
+由于函数也是个对象，所以函数也能作为函数的实参，作为实参的函数我们称为回调函数
+
+```python
+def speak(obj):
+    print("id:", id(obj))
+    print("type:", type(obj))
+    print("value:", obj)
+    print("-" * 20)
+
+
+def add():
+    print("1+1=", 1 + 1)
+
+speak(add)
+'''
+id: 4456042704
+type: <class 'function'>
+value: <function add at 0x10999d0d0>
+'''
+```
+
+回调函数的执行
+
+```python
+
+def speak(obj):
+    obj(1, 2)
+
+def add(i, j):
+    print(f"{i}+{j}=", i + j)
+
+speak(add)
+'''
+1+2= 3
+'''
+```
+
+
+
+##### 值传递
+
+数值，字符串，布尔值，浮点等类型在函数中传递数据值传递，在函数里面修改变量的值不会影响函数外的变量
+
+```python
+
+def print_value(a):
+    print("a_id:", id(a))
+    a = 2
+    print("a_id:", id(a))
+
+
+b = 1
+
+print("b id:", id(b))
+print_value(b)
+print("b id:", id(b))
+
+b id: 4455717168
+a_id: 4455717168
+a_id: 4455717200
+b id: 4455717168
+```
+
+
+
+##### 引用传递
+
+其它高级对象在函数中传递时，传递的是函数的地址，所以在函数里面修改变量的值会影响函数外的变量
+
+```python
+def update_list(a):
+    a[1] = 10
+
+list = [1, 2, 3, 4]
+
+update_list(list)
+print(list)
+```
+
+
+
+#### 不定长参数
+
+##### *
+
+
+
+在定义函数时，可以在形参前加上一个*，这样这个形参将获取到所有的实参
+
+它将会把所有的实参保存到一个元组中
+
+```python
+# *a 会接受所有的位置实参，并且会将这些实参统一保存到一个元组中（包装）
+def fn(*a):
+    print("a=", a, type(a))
+
+
+fn(1, 2, 3, 4, 5, 6)
+'''
+a= (1, 2, 3, 4, 5, 6) <class 'tuple'>
+'''
+```
+
+带*号的参数只能有一个
+
+带*号的参数可以和其他参数配合使用
+
+可变参数不是必须写在最后，但是注意，带*的参数后的所有参数，必须以关键字参数的形式传递
+
+如果在形参的开头直接写一个*,则要求我们所有的参数必须以关键字参数的形式传递
+
+形参只能接收位置参数，而不能接收关键字参数
+
+```python
+
+# 第一个参数给a，第二个参数给b，剩下的都保存到c的元组中
+def fn2(a, b, *c):
+    print('a=', a)
+    print('b=', b)
+    print('c=', c)
+
+fn2(1, 2, 3, 4, 5, 6, 7, 8, 9)
+'''
+a= 1
+b= 2
+c= (3, 4, 5, 6, 7, 8, 9)
+'''
+
+
+def fn2(a, *b, c):
+    print('a=', a)
+    print('b=', b)
+    print('c=', c)
+
+
+fn2(1, 2, 3, 4, c=5)
+'''
+a= 1
+b= (2, 3, 4)
+c= 5
+'''
+# 这样传会报错:TypeError: fn2() missing 1 required keyword-only argument: 'c'
+fn2(1, 2, 3, 4, 5) 
+
+
+# 所有的位置参数都给a,b和c必须使用关键字参数
+def fn2(*a, b, c):
+    print('a=', a)
+    print('b=', b)
+    print('c=', c)
+
+
+fn2(1, 2, 3, b=1, c=2)
+'''
+a= (1, 2, 3)
+b= 1
+c= 2
+'''
+
+def fn2(*, a, b, c):
+    print('a=', a)
+    print('b=', b)
+    print('c=', c)
+
+
+fn2(a=1, b=2, c=3)
+'''
+a= 1
+b= 2
+c= 3
+'''
+fn2(1, 2, 3)  # TypeError: fn2() takes 0 positional arguments but 3 were given
+
+
+
+# 如果在形参的开头直接写一个*，则要求我们的所有的参数必须以关键字参数的形式传递
+def fn2(*, a, b, c):
+    print('a=', a)
+    print('b=', b)
+    print('c=', c)
+
+
+fn2(a=1, b=2, c=3)
+'''
+a= 1
+b= 2
+c= 3
+'''
+fn2(1, 2, 3)  # TypeError: fn2() takes 0 positional arguments but 3 were given
+
+
+# 形参只能接收位置参数，而不能接收关键字参数
+def fn3(*a):
+    print('a=', a)
+
+
+fn3(1, 2, 3, 4, 5)
+'''
+a= (1, 2, 3, 4, 5)
+'''
+fn3(a=1)  # TypeError: fn3() got an unexpected keyword argument 'a'
+
+```
+
+
+
+练习:
+
+定义一个函数，可以求任意任意个数值元素的和
+
+```python
+def sum(*a):
+    print("a:", a)
+    print("a:", type(a))
+    sum = 0
+    for value in a:
+        sum += value
+    print("sum=", sum)
+
+
+sum(1, 2, 3, 4, 5, 6, 7, 8, 9)
+```
+
+
+
+
+
+##### **
+
+**形参可以接收其它的关键字参数，他回将这些参数统一保存到一个字典中
+
+​	字典的key就是参数的名字，字典的value就是参数的值
+
+**形参只能有一个，并且必须写在所有参数的最后
+
+```python
+
+def fn3(b, c, **a):
+    print('a=', a, type(a))
+
+
+fn3(1, 2, a=3, g=4)
+fn3(1, 2, a=3, b=4) #TypeError: fn3() got multiple values for argument 'b'
+```
+
+
+
+
+
