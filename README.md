@@ -2524,6 +2524,8 @@ numbers[99] = 2 #IndexError: list assignment index out of range
 
 #### del
 
+del关键字不要滥用
+
 语法:
 
 del list[index]
@@ -3035,9 +3037,9 @@ print(a , b) # 5,2
 
 
 
-### 元组的解包(结构)
+### 元组的解包(解构)
 
-解包指的时将元组当中每一个元素都赋值给一个变量
+解包指的是元组当中每一个元素都赋值给一个变量
 
 在对元组解包时，变量的数量必须和元组中的元素的数量一致
 
@@ -3280,6 +3282,8 @@ print(map2)#{'a': 2, 'd': 3, 'e': 4}
 #### 删
 
 ##### del map['key']
+
+注意:不要滥用del关键字，会导致代码难以维护
 
 可以使用del关键字来删除字典中的key-value
 
@@ -3770,6 +3774,8 @@ print(s)#{2, 3}
 
 #### |并集
 
+相当于两个集合的元素相加，实现的功能与序列的加法类似，但是注意，set没有加法运算
+
 ```python
 s = {1, 2, 3} | {2, 3, 4}
 print(s)#{1, 2, 3, 4}
@@ -3852,11 +3858,24 @@ s = {1, 2, 3, 4} > {1, 2, 3, 4}
 print(s)  # False
 ```
 
+|        | Python | Javascript | Java                                                |
+| ------ | ------ | ---------- | --------------------------------------------------- |
+| 交集   | &      | 自己写算法 | list1.retainAll(list2)                              |
+| 并集   | \|     | 自己写算法 | set1.addAll(set2)                                   |
+| 差集   | -      | 自己写算法 | set1.removeAll(set2)                                |
+| 异或集 | ^      | 自己写算法 | 自己写算法                                          |
+| 子集   | <=     | 自己写算法 | set1.containsAll(set2)                              |
+| 真子集 | <      | 自己写算法 | set1.containsAll(set2) && set1.size() > set2.size() |
+| 超集   | >=     | 自己写算法 | set2.containsAll(set1)                              |
+| 真超集 | >      | 自己写算法 | set2.containsAll(set1) && set2.size() > set1.size() |
+
+所以Python适合做数学工具
 
 
-## 函数
 
-### 函数简介(function)
+# 函数
+
+## 函数简介(function)
 
 ​	函数也是一个对象
 
@@ -3900,7 +3919,7 @@ fn()
 
 
 
-### 函数的参数
+## 函数的参数
 
 在定义函数时，可以在函数名的()中定义数量不等的形参
 
@@ -3910,9 +3929,11 @@ fn()
 
 实参(实际参数)
 
-​	如果函数定义时，指定了形参，那么在调用函数时也必须传递实参
+​	如果函数在定义时，指定了形参，那么在调用函数时也必须传递实参
 
 ​	实参将会赋值给对应的形参，简单来说，有几个形参就得传几个实参, 如果实参比形参更少，则会报错TypeError: fn() missing 1 required positional argument: 'b'
+
+​    实参的类型可以是任意类型对象
 
 ```python
 def fn(a, b):
@@ -3942,11 +3963,9 @@ def welcome(name):
 welcome('张三')
 ```
 
-#### 默认值
+### 默认值
 
-定义一个函数
-
-定义形参时，可以为形参指定默认值
+一个函数定义形参时，可以为形参指定默认值
 
 指定了默认值以后，如果用户传递了参数则默认值没有任何作用
 
@@ -3977,11 +3996,11 @@ c= 12
 '''
 ```
 
-#### 实参的传递方式
+### 实参的传递方式
 
-##### 位置参数
+#### 位置参数
 
-位置参数就是将对应位置的实参复制给对应位置的形参
+位置参数就是将对应位置的实参赋值给对应位置的形参
 
 第一个实参赋值给第一个形参，第二个实参赋值给第二个形参
 
@@ -3995,7 +4014,7 @@ mul(1, 2, 3)
 
 
 
-##### 关键字参数
+#### 关键字参数
 
 关键字参数，可以不按照形参定义的顺序去传递，而直接根据参数名去传递参数
 
@@ -4029,7 +4048,7 @@ mul(1, a=1) #TypeError: mul() got multiple values for argument 'a'
 
 
 
-#### 参数类型
+### 参数类型
 
 函数在调用时，解析器不会检查实参的类型
 
@@ -4083,7 +4102,7 @@ value: None
 
 
 
-##### 回调函数
+#### 回调函数
 
 由于函数也是个对象，所以函数也能作为函数的实参，作为实参的函数我们称为回调函数
 
@@ -4124,9 +4143,9 @@ speak(add)
 
 
 
-##### 值传递
+#### 值传递
 
-数值，字符串，布尔值，浮点等类型在函数中传递数据值传递，在函数里面修改变量的值不会影响函数外的变量
+数值，字符串，布尔值，浮点等类型的变量在函数中传递数据为值传递，在函数里面修改变量的值不会影响函数外的变量
 
 ```python
 
@@ -4150,9 +4169,9 @@ b id: 4455717168
 
 
 
-##### 引用传递
+#### 引用传递
 
-其它高级对象在函数中传递时，传递的是函数的地址，所以在函数里面修改变量的值会影响函数外的变量
+其它高级对象在函数中传递时，传递的是对象的地址，也称为传递的是对象的引用，所以在函数里面修改变量的值会影响函数外的变量
 
 ```python
 def update_list(a):
@@ -4166,9 +4185,9 @@ print(list)
 
 
 
-#### 不定长参数
+### 参数的装包(不定长参数)
 
-##### *
+#### *
 
 
 
@@ -4196,7 +4215,7 @@ a= (1, 2, 3, 4, 5, 6) <class 'tuple'>
 
 如果在形参的开头直接写一个*,则要求我们所有的参数必须以关键字参数的形式传递
 
-形参只能接收位置参数，而不能接收关键字参数
+当函数只有一个带*号的参数时，形参只能接收位置参数，而不能接收关键字参数
 
 ```python
 
@@ -4312,9 +4331,9 @@ sum(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
 
 
-##### **
+#### **
 
-**形参可以接收其它的关键字参数，他回将这些参数统一保存到一个字典中
+**形参可以接收其它的关键字参数，他会将这些参数统一保存到一个字典中
 
 ​	字典的key就是参数的名字，字典的value就是参数的值
 
@@ -4332,5 +4351,2357 @@ fn3(1, 2, a=3, b=4) #TypeError: fn3() got multiple values for argument 'b'
 
 
 
+### 参数的解包(拆包)
 
+#### *
+
+传递实参时，也可以在序列类型的参数前添加星号，这样他会自动将序列中的元素依次作为参数传递
+
+这里要求序列中的元素和形参的个数一致
+
+```python
+def fn4(a, b, c):
+    print('a=', a)
+    print('b=', b)
+    print('c=', c)
+
+
+t = (1, 2, 3)
+fn4(*t)
+'''
+a= 1
+b= 2
+c= 3
+'''
+t = [1, 2, 3]
+fn4(*t)
+'''
+a= 1
+b= 2
+c= 3
+'''
+fn4(t)  # TypeError: fn4() missing 2 required positional arguments: 'b' and 'c'
+```
+
+
+
+#### **
+
+我们也可以通过 ** 来对一个字典进行解包操作
+
+对字典进行解包时，也要求字典中的key与形参一一对应
+
+```python
+def fn4(a, b, c):
+    print('a=', a)
+    print('b=', b)
+    print('c=', c)
+
+
+a = {'a': 1000, 'b': 1, 'c': 3}
+fn4(**a)
+'''
+a= 1000
+b= 1
+c= 3
+'''
+
+a = {'a': 1000, 'b': 1}
+fn4(**a)  # TypeError: fn4() missing 1 required positional argument: 'c'
+
+a = {'a': 1000, 'b': 1, 'd': 3}
+# fn4(**a)#TypeError: fn4() got an unexpected keyword argument 'd'
+
+```
+
+## 函数的嵌套
+
+函数的嵌套就是函数内部还可以定义函数
+
+这种写法在Python中用的不多，但是是可以这样用的
+
+```python
+def play():
+    def play_ball():
+        print("我在里面打ball")
+
+    play_ball()
+    print("我在函数里玩")
+
+
+play()
+'''
+我在里面打ball
+我在函数里玩
+'''
+```
+
+
+
+## 返回值
+
+### return
+
+返回值，就是函数执行以后返回的结果
+
+可以通过return来指定函数的返回结果
+
+我们可以直接使用函数的返回值，也可以通过一变量来接收函数的返回值
+
+return后面跟什么值，函数就会返回什么值
+
+return后面可以跟任意对象，返回值甚至可以是一个函数
+
+
+
+```python
+def sum(*nums):
+    _sum = 0
+    for num in nums:
+        _sum += num
+    return _sum
+
+
+_sum = sum(1, 2, 3, 4, 6, 2)
+print(_sum)
+
+def animal():
+    def cat():
+        return "I am cat"
+
+    return cat
+
+
+str = animal()
+print(str) #<function animal.<locals>.cat at 0x000002AD14D4BCE0>
+print(str()) #I am cat
+```
+
+如果仅仅写一个return或者不写return，则相当于return None
+
+```python
+def fun3():
+    print("hello")
+    return
+
+def fun4():
+    print("hello")
+
+print(fun3()) #None
+print(fun4()) #None
+```
+
+在函数中,return后的代码都不会执行,return一旦执行函数自动结束
+
+
+
+```python
+def fun5():
+    return
+    print("hello") #不会执行
+    
+fun5()
+```
+
+### return与break的区别
+
+break中断的是循环，return中断的是整个函数, return还可以携带返回值
+
+```python
+def fun6():
+    for i in range(5):
+        if i == 3:
+            break
+        print("i=", i)
+    print("循环结束啦")
+
+print(fun6())
+'''
+i= 0
+i= 1
+i= 2
+循环结束啦
+None
+'''
+
+def fun7():
+    for i in range(5):
+        if i == 3:
+            return i
+        print("i=", i)
+    print("循环结束啦")
+
+print(fun7())
+'''
+i= 0
+i= 1
+i= 2
+3
+'''
+```
+
+### fn与fn()的区别
+
+fn是函数对象，打印fn，其实是在打印函数的对象<function fun at 0x0000018A0655F600>
+
+fn()是在执行函数，但因fn()实际上实在打印fn()函数的执行返回值
+
+```python
+def fun8():
+    return 10
+
+print(fun8) #<function fun8 at 0x0000018A0655F600>
+print(fun8()) #10
+```
+
+
+
+## help()
+
+help函数是Python中的内置函数
+
+作用是通过help()函数可以查询Python中函数的用法
+
+语法:	
+
+​	help(函数对象)
+
+```python
+help(print)
+'''
+Help on built-in function print in module builtins:
+
+print(*args, sep=' ', end='\n', file=None, flush=False)
+    Prints the values to a stream, or to sys.stdout by default.
+
+    sep
+      string inserted between values, default a space.
+    end
+      string appended after the last value, default a newline.
+    file
+      a file-like object (stream); defaults to the current sys.stdout.
+    flush
+      whether to forcibly flush the stream.
+'''
+```
+
+
+
+## 文档字符串
+
+在定义函数时，可以在函数内部编写文档字符串，文档字符串就是函数的说明
+
+当我们编写了文档字符串，就可以通过help()函数来查看函数的使用说明
+
+文档字符串非常简单，直接在函数的第一行写一个字符串就是文档字符串
+
+```python
+def fn(a, b, c):
+    '''
+    这是一个文档字符串的示例
+    :param a: 作用xxx
+    :param b: 作用xxx
+    :param c: 作用xxx
+    :return: 返回值
+    '''
+
+    return 10
+
+
+help(fn)
+'''
+fn(a, b, c)
+    这是一个文档字符串的示例
+    :param a: 作用xxx
+    :param b: 作用xxx
+    :param c: 作用xxx
+    :return: 返回值
+'''
+```
+
+### 类型声明
+
+为了方便其它人查看函数，我们还可以在函数上声明参数类型，返回值类型，但是要注意的是，声明的内容是不参与程序运行的，也就是说，声明了参数类型或者返回值类型，使用函数时，也可以不按照声明去使用函数
+
+```python
+def fn(a: str, b: int, c: bool) -> float:
+    '''
+    这是一个文档字符串的示例
+    :param a: 作用xxx
+    :param b: 作用xxx
+    :param c: 作用xxx
+    :return: 返回值
+    '''
+
+    return 10
+
+
+help(fn)
+'''
+fn(a: str, b: int, c: bool) -> float
+    这是一个文档字符串的示例
+    :param a: 作用xxx
+    :param b: 作用xxx
+    :param c: 作用xxx
+    :return: 返回值
+'''
+```
+
+
+
+## 作用域
+
+作用域指的是变量生效的区域
+
+在Python中一共有两种作用域
+
+全局作用域
+
+​	全局作用域在程序执行时创建，在程序执行结束时销毁
+
+​	所有函数以外的区域都是全局作用域
+
+​	在全局作用域中定义的变量，都属于<b>全局变量</b>，全局变量可以在程序的任意位置被访问
+
+函数作用域
+
+​	函数作用域在函数调用时创建，在函数结束时销毁
+
+​	函数每调用一次就会产生一个新的函数作用域
+
+​	在函数作用域中定义的变量，都是<b>局部变量</b>，它只能在函数内部中使用
+
+变量的查找
+
+​	当我们使用变量时，会优先在当前作用域中寻找该变量，如果有则使用
+
+​	如果没有则继续去上一级寻找，如果有则使用
+
+​	如果依然没有则继续去上一级作用域中寻找，以此类推
+
+​	直到找到全局作用域，如果依然没有找到，则会抛出异常NameError: name 'a' is not defined
+
+```python
+b = 20
+
+
+def fn():
+    # 定义在函数内部，所以他的作用域就是函数内部，函数外部无法访问
+    a = 10
+
+    print("函数内部:", 'a=', a)
+    print("函数内部:", 'b=', b)
+
+
+fn()
+print('函数外部:', 'b=', b)
+print('函数外部:', 'a=', a)  # NameError: name 'a' is not defined
+
+```
+
+```python
+a = 30
+def fn2():
+    #a = 30
+    def fn3():
+        print('fn3中:', 'a=', a)
+    fn3()
+
+fn2()
+
+```
+
+
+
+### global
+
+在函数中为变量赋值时，默认都是为局部变量赋值
+
+所以为函数内部的局部变量赋值时，并不会改变外部的全局变量的值
+
+如果 希望在函数内部修改全局变量，则需要使用global关键字来声明变量
+
+
+
+被global声明的变量，如果全局没有这个变量，则会在函数内部创建一个新的全局变量，但是要赋值才有意义
+
+​	如果有这个全局有这个变量，则会直接使用外部的全局变量
+
+```python
+a = 30
+
+print("刚开始声明时a的id", id(a), "a=", a)
+
+
+def fn2():
+    # a = 20
+    print("函数内部的a的id", id(a), "a=", a)
+
+
+fn2()
+print("函数外部的a的id", id(a), "a=", a)
+'''
+未赋值时:
+刚开始声明时a的id 140715048488280 a= 30
+函数内部的a的id 140715048488280 a= 30
+函数外部的a的id 140715048488280 a= 30
+'''
+```
+
+```python
+a = 30
+
+print("刚开始声明时a的id", id(a), "a=", a)
+
+
+def fn2():
+    a = 20
+    print("函数内部的a的id", id(a), "a=", a)
+
+
+fn2()
+print("函数外部的a的id", id(a), "a=", a)
+'''
+为局部变量赋值时:
+刚开始声明时a的id 140715048488280 a= 30
+函数内部的a的id 140715048487960 a= 20
+函数外部的a的id 140715048488280 a= 30
+'''
+```
+
+```python
+a = 30
+
+print("刚开始声明时a的id", id(a), "a=", a)
+
+
+def fn2():
+    # 声明在函数内部使用的a是全局变量，此时再去修改a时，就是在修改全局的a
+    global a 
+    a = 20 #修改的是全局变量
+    print("函数内部的a的id", id(a), "a=", a)
+
+
+fn2()
+print("函数外部的a的id", id(a), "a=", a)
+'''
+为局部变量赋值时:
+刚开始声明时a的id 140715531685208 a= 30
+函数内部的a的id 140715531684888 a= 20
+函数外部的a的id 140715531684888 a= 20
+'''
+```
+
+
+
+java没有这种global这种功能
+
+​	java匿名函数引用外部变量时，如果外部变量是基本数据类型，则需要将基本数据类型定义为final
+
+​	如果外部变量是对象，匿名函数可以直接操作这个对象，但是得保证这个对象是effectively final，也就是这个对象的引用不会改变
+
+
+
+## 命名空间
+
+命名空间实际上就是一个字典，是一个专门用来存储变量的字典
+
+### locals()
+
+locals()函数可以用来获取当前作用域的命名空间
+
+如果在全局作用域中调用locals()则获取全局命名空间，如果在函数作用域中调用locals()则获取的是函数命名空间
+
+locals()函数返回是一个字典
+
+```python
+a = 10
+b = 20
+
+
+def fn1():
+    c = 10
+
+
+_locals = locals()
+print(_locals)
+'''
+{  
+    '__name__': '__main__',  
+    '__doc__': None,  
+    '__package__': None,  
+    '__loader__': <_frozen_importlib_external.SourceFileLoader object at 0x00000200A67EBB30>,  
+    '__spec__': None,  
+    '__annotations__': {},  
+    '__builtins__': <module 'builtins' (built-in)>,  
+    '__file__': 'C:\\Users\\watermelon\\workspace\\python-lesson\\lesson008\\define_demo17.py',  
+    '__cached__': None,  
+    'a': 10,  
+    'b': 20,  
+    'fn1': <function fn1 at 0x00000200A69EBCE0>,  
+    '_locals': {...}  
+}
+'''
+_locals['c'] = 30 #虽然可以这样操作，但是不建议
+print(c) #30
+
+```
+也可以获取函数命名空间
+```python
+a = 10
+b = 20
+
+
+def fn1():
+    c = 10
+    fun1_locals = locals() #获取函数命名空间
+    print(fun1_locals)  # {'c': 10}
+
+
+fn1()
+
+```
+
+
+
+### globals()
+
+globals()函数可以在任意位置获取全局命名空间
+
+```python
+a = 10
+b = 20
+
+
+def fn1():
+    c = 10
+    fun1_locals = locals() #获取函数命名空间
+    print(fun1_locals)  # {'c': 10}
+    _global = globals()
+    print(_global)
+    '''
+    {  
+    '__name__': '__main__',  
+    '__doc__': None,  
+    '__package__': None,  
+    '__loader__':<_frozen_importlib_external.SourceFileLoader object at 0x00000266EC19BB30>,  
+    '__spec__': None,  
+    '__annotations__': {},  
+    '__builtins__': <module 'builtins' (built-in)>,  
+    '__file__': 'C:\\Users\\watermelon\\workspace\\python-lesson\\lesson008\\define_demo17.py',  
+    '__cached__': None,  
+    'a': 10,  
+    'b': 20,  
+    'fn1': <function fn1 at 0x00000266EC33BCE0>  
+}
+    '''
+
+fn1()
+
+```
+
+
+
+## 递归函数
+
+使用for循环编写一个函数求10的阶层
+
+```python
+def factorial(n: int) -> int:
+    _sum = 1
+    for i in range(1, n + 1):
+        _sum = _sum * i
+    return _sum
+
+
+a = factorial(10)
+print(a) #3628800
+```
+
+递归函数：
+
+从前有座山，山里有座庙，庙里有个老和尚，老和尚在将故事，故事里说:
+
+​	从前有座山，山里有座庙，庙里有个老和尚，老和尚在将故事，故事里说:
+
+​		...
+
+递归函数简单的理解就是自己去调用自己
+
+无穷递归，如果这个函数一直在自己调用自己，那么程序的内存会溢出，效果类似于死循环
+
+```python
+def fn():
+    print("从前有座山，山里有座庙，庙里有个老和尚，老和尚在将故事，故事里说:")
+    fn()
+
+fn()
+```
+
+递归是解决问题的一种方式，它和循环很像
+
+​	它的整体思想是，将一个大问题分解为一个个的小问题，直到问题无法分解时，再去解决问题
+
+递归函数的两个必要条件：
+
+1. 递归条件
+
+   找到什么时候要自己调用自己,还有调用自己的方式是什么，自己调用自己的方式也就是公式
+
+2. 结束条件
+
+   问题可以被分解为的最小问题，也就是递归不再执行的条件
+
+
+
+求n的阶乘
+
+```python
+'''
+求x的阶乘
+x * (x-1) * (x-2) * (x-3) ... * 1
+即
+x *(x-1) * (x-1-1) * (x-1-1-1) ... * 1
+
+ 结束条件
+    n == 1
+ 递归条件
+    f(n)=n*f(n-1)
+'''
+
+
+def factorial(n: int) -> int:
+    if n == 1:
+        return 1
+
+    return n * factorial(n - 1)
+
+
+print(factorial(10))
+```
+
+
+
+
+
+练习:
+
+1. 创建一个函数power来为任意数字做幂运算n**i
+
+   ```python
+   '''
+   创建一个函数power来为任意数字做幂运算n**i
+   
+   结束条件:
+     i == 0
+       return;
+   递归公式：
+   2**8-->2 *2 *2  *2  *2  *2  *2  *2
+     n*f(n,i-1)
+   '''
+   
+   
+   def power(n, i):
+       if i == 1:
+           return n
+       return n * pow(n, i - 1)
+   
+   
+   print(power(2, 10))
+   
+   ```
+
+   
+
+2. 创建一个函数，用来检查一个任意的字符串是否是回文字符串，如果是返回True，否则返回False
+
+   回文字符串，字符串从前往后念和从后往前念是一样的
+
+   ​	abcdefgfedcba
+
+   ```python
+   '''
+   创建一个函数，用来检查一个任意的字符串是否是回文字符串，如果是返回True，否则返回False
+   
+   回文字符串，字符串从前往后念和从后往前念是一样的
+   0 -1   abcdefgfedcba
+   0 -1   bcdefgfedcb
+   0 -1   cdefgfedc
+   0 -1   defgfed
+   0 -1   efgfe
+   0 -1   fgf
+   
+       递归条件:
+           fn(_str[1:-1])
+       结束条件:
+           len(_str) < 2
+           _str[0] != _str[-1]
+   '''
+   
+   
+   def palindrome(_str):
+   
+       if len(_str) < 2:
+           return True
+       if _str[0] != _str[-1]:
+           return False
+       else:
+           return palindrome(_str[1:-1])
+   
+   print(palindrome("abcdefgfedcba"))
+   ```
+
+   
+
+   
+
+   ```python
+   '''
+   创建一个函数，用来检查一个任意的字符串是否是回文字符串，如果是返回True，否则返回False
+   
+   回文字符串，字符串从前往后念和从后往前念是一样的
+      abcba
+   递归公式：
+   abcba
+   0,4
+   1,3
+   2,2
+   abccba:
+   0,5
+   1,4
+   2,3
+   fn(words,n)
+   
+   结束条件:
+       n> = len-1-n:
+           return True
+       words[start] != words[end]
+           return False
+   '''
+   
+   
+   def palindrome(_str):
+       def is_equals(words, n):
+           end = len(words) - 1 - n
+           if n >= end:
+               return True
+           if words[n] != words[end]:
+               return False
+           return is_equals(words, n + 1)
+   
+       _words = list(_str)
+       return is_equals(_words, 0)
+   
+   
+   print(palindrome('abcba'))
+   ```
+
+   
+
+   
+
+3. 求第n个斐波那契数列的值
+
+   ​		比如:1，1，2，3，5，8，13，21，34，55...中
+
+   ​		第4个的值是3
+
+   ​		第5个的值是8
+
+   ```python
+   # 斐波那契数列是指这样一个数列：1，1，2，3，5，8，13，21，34，55，89……这个数
+   # 列从第3项开始 ，每一项都等于前两项之和。
+   # 请打印n位斐波那契数列
+   '''
+   结束条件:
+       n == 1
+           return 1
+   递归条件
+       f(n) = f(n-2)*f(n-1)
+   '''
+   
+   
+   def f(n):
+       if n == 0:
+           return 0
+       if n == 1:
+           return 1
+       else:
+           return f(n - 2) + f(n - 1)
+   
+   print(f(6))
+   ```
+
+4. 给两个非空列表，表示两个非负的整数，它们每次都是按照逆序的方式存储，并且列表中的每个元素都只能存储一位大于等于0小于等于9的数字。
+
+   请你加两个数相加，并以相同的形式表示一个和的列表
+
+   你可以假设除了数字0外，这两个数字都不会以0开头
+
+   比如 123+7899=10110
+
+   则 列表1为[3,2,1],列表2为[7,8,9,9],和为[0,1,1,0,1]
+
+   即
+
+   ```python
+          123  -->a
+       + 9987  -->b
+       -------
+        10110
+   ```
+
+   ```python
+   '''
+   给你两个 非空 的链表，表示两个非负的整数。它们每位数字都是按照 逆序 的方式存储的，并且每个节点只能存储 一位 数字。
+   请你将两个数相加，并以相同形式返回一个表示和的链表。
+   你可以假设除了数字 0 之外，这两个数都不会以 0 开头。
+   比如
+   a = [3,2,1]
+   b = [7,8,9,9]
+   sum = [0,1,1,0,1]
+          123  -->a
+       + 9987  -->b
+       -------
+        10110
+   '''
+   
+   
+   def addTwoNumbers(l1, l2):
+       '''
+       列表求和
+       :param l1: 整数1列表
+       :param l2: 整数2列表
+       :return: 
+       '''
+       def add(list_a, list_b, c, _sum):
+           '''
+           使用递归列表求和
+           
+           结束条件:
+             a,b,c都是0
+            递归条件：
+             当前计算结果的序列
+             add(下一个a,下一个b,当前进位,当前计算结果序列)
+           :param list_a: 整数1列表
+           :param list_b: 整数2列表
+           :param c: 进位
+           :param _sum: 初始结果列表
+           :return: 结果列表
+           '''
+           if _sum == None:
+               _sum = []
+   
+           if len(list_a) == 0 and len(list_b) == 0 and c == 0:
+   
+               return _sum
+           else:
+               a = 0
+               if len(list_a) != 0:
+                   a = list_a[0]
+               b = 0
+               if len(list_b) != 0:
+                   b = list_b[0]
+   
+               _sum.append((a + b + c) % 10)  # 计算每一位
+               c = (a + b + c) // 10  # 下一个进位
+               return add(list_a[1:], list_b[1:], c, _sum)
+   
+       return add(l1, l2, 0, [])
+   
+   
+   def intToSequence(num: int):
+       '''
+       将一个自然数倒叙，并存储列表中
+       比如1234->[4,3,2,1]
+       :param num: 自然数
+       :return: 列表
+       '''
+       num_str = str(num)
+       num_list = list(num_str)
+       num_list.reverse()
+       result = []
+       for v in num_list:
+           result.append(int(v))
+       return result
+   
+   
+   num1 = intToSequence(123)
+   num2 = intToSequence(2343242)
+   
+   s = addTwoNumbers(num1, num2)
+   print(s)
+   ```
+
+   
+
+## 高阶函数(回调函数)
+
+所谓的高阶函数，其实就是回调函数,就是把函数作为参数
+
+定义一个函数，用于获取一个整数list中所有偶数，并以list的形式返回
+
+```python
+def select(_list):
+    '''
+    获取列表中所有偶数返回
+    :param _list:
+    :return:
+    '''
+    _result = []
+    for v in _list:
+        if v % 2 == 0:
+            _result.append(v)
+
+    return _result
+
+
+result = select([2, 3, 5, 6, 8, 2, 1, 2, 4, 18])
+print(result)  # [2, 6, 8, 2, 2, 4, 18]
+```
+
+如果说我希望这个函数能自定义返回条件，比如返回list中所有的偶数、返回list中所有大于5的数，返回list中大于2小于5的数，则可以把返回的条件定义成方法，交给调用者决定使用哪个条件。
+
+```python
+def select(func, _list):
+    '''
+    获取列表中所有符合条件的返回
+    :param _list:
+    :return:
+    '''
+    _result = []
+    for v in _list:
+        if func(v):
+            _result.append(v)
+
+    return _result
+
+
+def fun1(meta):
+    '''
+    判断meta是否是奇数
+    :param meta:
+    :return:
+    '''
+    return meta % 2 != 0
+
+
+def fun2(meta):
+    '''
+    判断meta是否是偶数
+    :param meta:
+    :return:
+    '''
+    return meta % 2 == 0
+
+
+def fun3(meta):
+    '''
+    判断meta是否大于5
+    :param meta:
+    :return:
+    '''
+    return meta > 5
+
+
+def fun4(meta):
+    '''
+    判断meta是否大于2小于5
+    :param meta:
+    :return:
+    '''
+    return 2 < meta < 5
+
+
+params = [2, 3, 5, 6, 8, 2, 1, 2, 4, 18]
+result = select(fun4, params)
+print(result)  # [2, 6, 8, 2, 2, 4, 18]
+```
+
+## filter(condition_func,list)
+
+作用：可以从序列中过滤出符合条件的元素，保存到一个新序列中返回
+
+参数：
+
+1. 函数: 根据该函数来过滤序列(可迭代的结构)
+2. 需要过滤的序列(可迭代的结构)
+
+返回值:
+
+​	过滤后的新序列(可迭代的结构)
+
+```python
+def condition1(meta):
+    '''
+    判断meta是否是奇数
+    :param meta:
+    :return:
+    '''
+    return meta % 2 != 0
+
+
+def condition2(meta):
+    '''
+    判断meta是否是偶数
+    :param meta:
+    :return:
+    '''
+    return meta % 2 == 0
+
+
+def condition3(meta):
+    '''
+    判断meta是否大于5
+    :param meta:
+    :return:
+    '''
+    return meta > 5
+
+
+def condition4(meta):
+    '''
+    判断meta是否大于2小于5
+    :param meta:
+    :return:
+    '''
+    return 2 < meta < 5
+
+
+params = [2, 3, 5, 6, 8, 2, 1, 2, 4, 18]
+result = filter(condition4, params)
+print(list(result))  # [2, 6, 8, 2, 2, 4, 18]
+```
+
+
+
+## 匿名函数(lambda表达式)
+
+匿名函数，顾名思义，也就是没有名字的函数，它是函数的另一种创建方式
+
+匿名函数，也称为lambda表达式
+
+一个函数只在一个地方被使用时，一般才会被定义成匿名函数，匿名函数一般都会被当成参数使用
+
+语法:
+
+​	lambda 参数列表:返回值
+
+```python
+lambda1 = lambda meta: meta % 2 != 0
+```
+
+lambda表达式的使用：
+
+```python
+lambda1 = lambda meta: meta % 2 != 0
+
+lambda2 = lambda meta: meta % 2 == 0
+
+lambda3 = lambda meta: meta > 5
+
+lambda4 = lambda meta: 2 < meta < 5
+
+params = [2, 3, 5, 6, 8, 2, 1, 2, 4, 18]
+result1 = filter(lambda1, params)
+result2 = filter(lambda2, params)
+result3 = filter(lambda3, params)
+result4 = filter(lambda4, params)
+```
+
+上面这种使用方法还是太麻烦，再次简化如下
+
+```python
+params = [2, 3, 5, 6, 8, 2, 1, 2, 4, 18]
+result1 = filter(lambda meta: meta % 2 != 0, params)
+result2 = filter(lambda meta: meta % 2 == 0, params)
+result3 = filter(lambda meta: meta > 5, params)
+result4 = filter(lambda meta: 2 < meta < 5, params)
+```
+
+
+
+匿名函数的直接调用:
+
+一般情况下，匿名函数都会被当成参数传递给函数使用，而不会直接调用
+
+```python
+lambda1 = lambda meta: meta % 2 != 0
+result1 = lambda1(3)
+print(result1)
+# 或者
+result2 = (lambda meta: meta % 2 != 0)(3)
+print(result2)
+```
+
+
+
+## map(operation_func,list)
+
+作用：可以迭代对象中所有的元素做指定的操作，然后将其添加到一个新的对象中返回
+
+参数：
+
+1. 函数: 根据该函数来对list中每一项做指定的操作
+2. 需要迭代操作的序列(可迭代的结构)
+
+返回值:
+
+​	操作后的新序列(可迭代的结构)
+
+```python
+_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+result = map(lambda x: x * 10, _list)
+print(list(result)) #[10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+```
+
+
+
+## list.sort(key=func)
+
+该方法可以对列表中的元素进行排序
+
+sort()方法默认返回的是直接比较列表中元素的大小
+
+在sort()可以接受一个关键字参数,key
+
+​	key需要一个函数对象作为参数，当设置了函数对象作为参数
+
+​	则排序的时候每次都会以列表中的一个元素作为参数来调用该函数，并且使用函数的返回值来比较元素的大小
+
+```python
+_list = [1, "2", 3, 2, 5, "3", 7, "1", 5, 10]
+# _list.sort()#TypeError: '<' not supported between instances of 'str' and 'int'
+_list.sort(key=int)  # 将每个元素转成int再比较
+
+print(_list)  # [1, '1', '2', 2, 3, '3', 5, 5, 7, 10]
+
+_list.sort(key=str)  # 将每个元素转成字符再比较
+print(_list)  # [1, '1', 10, '2', 2, 3, '3', 5, 5, 7]
+
+_list = ["abc:", "2", "324s", "hello", "ko", "3", 's', "1", "android", "apple"]
+_list.sort(key=len)
+print(_list)  # ['2', '3', 's', '1', 'ko', 'abc:', '324s', 'hello', 'apple', 'android']
+```
+
+## sorted(list,func)
+
+这个函数属于通用的方法，与list.sort()的用法基本一致，但是sorted()可以对任意的序列进行排序
+
+并且，使用sorted()排序不会影响到原来的对象，而是返回一个新的list对象
+
+```python
+my_tuple = (1, 2, 4, 5, '1', '100', '2', '28')
+result = sorted(my_tuple, key=int)
+print(result)  # [1, '1', 2, '2', 4, 5, '28', '100']
+print(type(result))  # <class 'list'>
+
+s = 'helloworld'
+result = sorted(s)
+print(result)  # ['d', 'e', 'h', 'l', 'l', 'l', 'o', 'o', 'r', 'w']
+print(''.join(result))  # dehllloorw
+```
+
+
+
+## 闭包函数
+
+闭包函数是一个被外部函数包裹的函数
+
+闭包函数通常具备以下特点:
+
+1. 闭包函数是一个函数的内部函数
+2. 闭包函数可以使用外部的变量
+3. 闭包函数会被外部函数包裹
+4. 闭包函数会被作为返回值被外部函数返回，然后外部可以调用到闭包函数
+
+
+
+闭包函数的作用:
+
+1. 可以延长外部函数局部变量的声明周期
+2. 闭包函数可以保护私有变量不被外界访问
+
+下面例子中的averager就是闭包函数
+
+```python
+def make_averager():
+    numbers = []
+
+    def averager(n):
+        numbers.append(n)
+        return sum(numbers) / len(numbers)
+
+    return averager
+
+
+averager = make_averager()
+print(averager(1))
+print(averager(2))
+print(averager(3))
+
+```
+
+### 闭包函数修改无法外层变量
+
+闭包函数属于内层函数，在Python中，内层函数可以访问外层函数的变量，但是内层函数是无法修改外层函数的变量指向的，即使使用了相同变量名
+
+这种情况通常是内层函数使用了外部相同变量名时，内部函数会先创建这个变量副本，然后导致使用这个变量的时候，变量虽然在内层函数创建了，但是还未赋值，所以编译器会报错
+
+比如下面两个例子:
+
+```python
+def make_averager():
+    numbers = []
+
+    def averager(n):
+        numbers = numbers[:] # 这里编译器会报错
+        return sum(numbers) / len(numbers)
+
+    return averager
+
+
+averager = make_averager()
+averager01 = make_averager()
+print(averager(10))
+
+```
+
+```python
+def accumulator():
+    '''
+      定义一个累加器
+    :return: 累加方法
+    '''
+    a = 0
+
+    def increment():
+        a = a + 1 #报错，原因:这里是先创建了一个叫做a的局部
+        # 变量，然后再找一个叫做a的变量加1，而刚好本地就有一个局部变量，
+        # 但是这个a还未赋值，所以这里编译不通过
+        # print(a) #不会报错
+        # b = a + 1 #不会报错
+        # a = 10 #不会报错
+
+    return increment
+
+
+increment = accumulator()
+increment()
+increment()
+increment()
+increment()
+```
+
+那怎么解决相同变量名问题呢？
+
+### nonlocal
+
+nonlocal是Python中的一个关键字，用于声明一个变量不是局部变量，而是外层作用域中的变量。在函数内部使用nonlocal关键字时，它会告诉Python解释器某个变量不是在当前函数内定义的局部变量，而是其外部作用域中定义的一个的变量
+
+nonlocal找的是离当前作用域最近的作用域中的变量
+
+使用案例:
+
+```python
+def make_averager():
+    numbers = [1]
+
+    def averager(n):
+        nonlocal numbers
+        numbers = numbers[:] #编译不会报错了
+        return sum(numbers) / len(numbers)
+
+    return averager
+
+
+averager = make_averager()
+averager01 = make_averager()
+print(averager(10))
+```
+
+
+
+```python
+def accumulator():
+    '''
+      定义一个累加器
+    :return: 累加方法
+    '''
+    a = 0
+
+    def increment():
+        nonlocal a
+        a = a + 1 #编译不会报错了
+
+    return increment
+
+
+increment = accumulator()
+increment()
+increment()
+increment()
+increment()
+
+```
+
+
+
+### 与Java语言的区别
+
+在Java中，可以展示类似闭包的行为，但是由于Java的匿名内部类的方法要调用外部方法时，外部方法的局部变量必须使用final修饰，这主要是因为Java要实现向老版本兼容的特性，而Java8之前已经规定了这个外部对象必须是final或者事实上是final
+
+其他语言，外部的局部变量定义了，还能修改变量的值，甚至是变量的引用指向，而Java因为被final修饰，所以不能修改。
+
+比如下面这点，Java就做不到:
+
+```python
+def accumulator():
+    '''
+      定义一个累加器
+    :return: 累加方法
+    '''
+    a = 0
+
+    def increment():
+        nonlocal a
+        a = a + 1
+        print(a)
+
+    a = 2 # 这种写法在Java是不被允许的，在Python可以
+    return increment
+
+
+increment = accumulator()
+increment()
+increment()
+increment()
+increment()
+```
+
+
+
+Java实现类似闭包的案例:
+
+```python
+package closure.demo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ClosureDemo01 {
+    public interface MakeAveragerInterface {
+        Double averager(int value);
+    }
+
+    public static MakeAveragerInterface makeAverager() {
+        List<Integer> numbers = new ArrayList<>();
+
+        return value -> {
+            numbers.add(value);
+            int sum = 0;
+            for (Integer number : numbers) {
+                sum += number;
+            }
+            return sum / Integer.valueOf(numbers.size()).doubleValue();
+        };
+    }
+
+    public static void main(String[] args) {
+        MakeAveragerInterface makeAverager = makeAverager();
+        System.out.println(makeAverager.averager(1));
+        System.out.println(makeAverager.averager(2));
+        System.out.println(makeAverager.averager(3));
+    }
+}
+```
+
+
+
+Java只能展示类似闭包行为的证据:
+
+```java
+package closure.demo;
+
+
+public class ClosureDemo02 {
+    public interface MakeAveragerInterface {
+        Double averager(int value);
+    }
+
+    public static MakeAveragerInterface makeAverager() {
+        int a = 1;
+
+        return value -> {
+            /**
+             * Java只能展示类似闭包的行为，但这和真正的闭包还是有区别的。
+             * 比如:
+             *  这种情况下编译不通过，因为java的匿名内部类使用外部对象的时候，外部对象一定要被final修饰
+             *  是不能修改外部方法对象的引用的，而其他语言的真正闭包，是能做到这一点的
+             */
+            a = value;
+        };
+    }
+
+    public static void main(String[] args) {
+        MakeAveragerInterface makeAverager = makeAverager();
+        System.out.println(makeAverager.averager(1));
+        System.out.println(makeAverager.averager(2));
+        System.out.println(makeAverager.averager(3));
+    }
+}
+```
+
+## 装饰器
+
+装饰器是一种特殊的语法，主要用于在不修改原有函数的情况下，增强函数的功能
+
+### 装饰器概念的引入
+
+
+
+下面就是一种装饰器的实现
+
+```python
+# 装饰器的引入
+def add(x, y):
+    return x + y
+
+
+def mul(x, y):
+    return x * y
+
+
+def hello():
+    print('hello')
+
+
+# 需求:要求将在函数执行前打印程序开始执行，函数执行完毕后打印程序结束执行
+def my_decorator(func):
+    def do(*x, **y):
+        print("程序开始执行")
+        r = func(*x, **y)
+        print("程序结束执行")
+        return r
+
+    return do
+
+
+my_decorator_do = my_decorator(mul)
+r = my_decorator_do(2, 3)
+print(r)
+'''
+程序开始执行
+程序结束执行
+6
+'''
+
+my_decorator_do = my_decorator(add)
+r = my_decorator_do(2, 3)
+print(r)
+'''
+程序开始执行
+程序结束执行
+5
+'''
+
+my_decorator_do = my_decorator(hello)
+r = my_decorator_do()
+print(r)
+'''
+程序开始执行
+hello
+程序结束执行
+None
+'''
+```
+
+
+
+### 装饰器的使用@装饰器
+
+像my_decoratorz这种函数我们就称它为装饰器
+
+​	通过装饰器，可以在不修改原来函数的情况下对函数进行扩展
+
+​	在开发中，我们都是通过装饰器来扩展函数的功能的
+
+在定义函数时，可以通过@装饰器来使用指定的装饰器，来装饰当前的函数
+
+​	我们可以同时为一个函数指定多个装饰器，这样函数将会按照从内向外的顺序被装饰
+
+```python
+# 需求:要求将在函数执行前打印程序开始执行，函数执行完毕后打印程序结束执行
+def my_decorator(func):
+    def do(*x, **y):
+        print("程序开始执行")
+        r = func(*x, **y)
+        print("程序结束执行")
+        return r
+
+    return do
+
+
+def my_decorator2(func):
+    def do(*x, **y):
+        print("程序2开始执行")
+        r = func(*x, **y)
+        print("程序2结束执行")
+        return r
+
+    return do
+
+
+# 装饰器的引入
+@my_decorator
+@my_decorator2
+def add(x, y):
+    return x + y
+
+
+@my_decorator
+def mul(x, y):
+    return x * y
+
+
+@my_decorator
+def hello():
+    print('hello')
+
+
+r = add(1, 2)
+print(r)
+'''
+程序开始执行
+程序2开始执行
+程序2结束执行
+程序结束执行
+3
+'''
+
+r = mul(1, 2)
+print(r)
+'''
+程序开始执行
+程序结束执行
+2
+'''
+
+r = hello()
+print(r)
+'''
+程序开始执行
+hello
+程序结束执行
+None
+'''
+
+```
+
+# 面向对象
+
+## 面向对象的概念
+
+
+
+## 类 class
+
+### 类的简介
+
+我们目前所学习的对象都是Python内置的对象，比如:
+
+但是内置对象并不能满足所有的需求，所以我们在开发中经常需要自定义一些对象
+
+```python
+a = int(10)  # 创建一个int类的实例
+b = str('hello')  # 创建一个str类的实例
+print(a, type(a))  # 10 <class 'int'>
+print(b, type(b))  # hello <class 'str'>
+```
+
+
+类，简单理解就相当于一个图纸。在程序中我们需要根据类来创建对象
+
+类就是对象的图纸！
+
+我们也称对象是类的实例(instance)
+
+如果多个对象是通过一个类创建的，我们称这些对象是一类对象
+
+像list()、set()、dict()、int()、str()、float()...等，这些都是类
+
+a = int(10) 就相当于创建了一个int类的实例 等价于 a = 10
+
+我们自定义的类都需要使用大写字母开头，使用大驼峰命名法来对类命名
+
+类的语法:
+
+class 类名([父类])：
+
+​	代码块
+
+使用类创建对象，就像调用函数一样
+
+```python
+# 定义一个类
+class Dog:
+    pass
+
+
+# 直接打印类
+print(Dog)  # <class '__main__.Dog'>
+
+# 创建类的对象/类的实例化
+dog1 = Dog()
+dog2 = Dog()
+dog3 = Dog()
+print(dog1, id(dog1), type(dog1))  # <__main__.Dog object at 0x00000192A4187E60> 1729329921632 <class '__main__.Dog'>
+print(dog2, id(dog2), type(dog2))  # <__main__.Dog object at 0x00000192A4187DD0> 1729329921488 <class '__main__.Dog'>
+print(dog3, id(dog3), type(dog3))  # <__main__.Dog object at 0x00000192A4187E00> 1729329921536 <class '__main__.Dog'>
+```
+
+### isinstance(obj,className)
+
+这个函数可以判断这个对象是否是这个类实例化的
+
+如果这个类是这个对象的父类，也会返回True
+
+语法:
+
+​	参数1: 实例化后的对象
+
+​	参数2:类名
+
+返回:
+
+​	布尔值
+
+```python
+# 定义一个类
+class Dog:
+    pass
+
+
+# 直接打印类
+print(Dog)  # <class '__main__.Dog'>
+
+# 创建类的对象/类的实例化
+dog1 = Dog()
+
+print(isinstance(dog1, Dog)) #True
+print(isinstance(dog1, str)) #False
+print(isinstance(dog1, int)) #False
+```
+
+
+
+### 类的本质
+
+类也是一个对象
+
+类就是一个用来创建对象的对象
+
+类是type类型的对象，定义类实际上就是定义了一个type类型的对象
+
+```python
+# 定义一个类
+class Dog:
+    pass
+
+
+print(Dog, id(Dog), type(Dog))  # <class '__main__.Dog'> 2123576889728 <class 'type'>
+# Dog其实是type类型的对象，定义类其实就是使用Dog这个变量接收了一个type类型的对象
+# 我们可以给Dog这个变量重新赋值
+Dog = 1
+print(Dog, id(Dog), type(Dog))  # 1 140715510843832 <class 'int'>
+```
+
+
+
+### 使用类创建对象的流程
+
+1. 创建一个变量dog
+2. 在内存中创建一个新对象
+3. 将对象的id赋值给变量
+
+![](./images/001.png)
+
+下面我们通过Dog类创建的对象都是空对象
+
+空对象也就是对象中实际什么都没有，就相当于一个空盒子
+
+可以动态的向对象中添加变量，对象中的变量称为属性
+
+语法: 对象.属性名 = 属性值
+
+```python
+# 定义一个类
+class Dog:
+    pass
+
+
+dog = Dog()
+dog.name = '旺财'
+print(dog.name) #旺财
+```
+
+
+
+### 类的定义
+
+类和对象都是对现实生活中事物或程序中内容的抽象
+
+实际上所有的事物都由两部分构成
+
+1. 数据(属性)
+2. 行为(方法)
+
+在类的代码块中，我们可以定义变量和函数
+
+​	变量会成为该实例的公共属性，所有的该实例都可以通过 对象.属性名 的形式访问
+
+​	函数会成为该类实例的公共方法，所有该类实例都可以通过对象.方法名()的形式调用
+
+注意:
+
+​	方法调用时，第一个参数由解析器自动传递，所以定义方法时，至少要定义一个形参！
+
+```python
+# 定义一个类
+class Person:
+    name = 'wjh'
+
+    def say_hello():
+        # 这里会报错：TypeError: Person.say_hello() takes 0 positional arguments but 1 was given
+        # 因为使用对象.方法()的方法调用时，第一个参数由解析器自动传递，所以定义方法时，至少要定义一个形参
+        print("你好!")
+
+p1 = Person()
+p2 = Person()
+p1.say_hello()
+p2.say_hello()
+```
+
+
+
+正确写法：
+
+```python
+# 定义一个类
+class Person:
+    name = 'wjh'
+
+    def say_hello(self):
+        print("你好!")
+
+
+p1 = Person()
+p2 = Person()
+p1.say_hello()  # 你好!
+p2.say_hello()  # 你好!
+```
+
+
+
+#### 方法调用和函数调用的区别
+
+如果是函数调用，则调用时传几个参数，就会有几个实参
+
+但是如果是方法调用，默认传递一个参数，所以方法中至少要定义一个形参
+
+
+
+### 属性和方法
+
+#### 属性和方法的查找流程
+
+当我们调用一个对象的属性时，解析器会先在当前对象中查找是否含有该属性
+
+如果有，则直接返回当前对象的属性值
+
+如果没有，则去当前对象的类对象中寻找，如果有则返回类对象的属性值，如果没有则报错！
+
+![](./images/002.png)
+
+```python
+# 定义一个类
+class Person:
+    name = 'wjh'
+
+    def say_hello(self):
+        print("你好!")
+
+
+p1 = Person()
+p1.name = 'laimin'
+print(p1.name)  # laimin 在实例对象中查到的属性值
+
+p2 = Person()
+print(p2.name)  # wjh 在类对象中查找到的属性值
+```
+
+
+
+类对象和实例对象中都可以保存属性和方法
+
+如果这个属性或方法是所有实例共享的，则应该保存到类对象中
+
+如果这个属性是某个实例独有，则应该保存到实例对象中
+
+一般情况下，属性保存到实例对象中
+
+而方法需要保存到类对象中
+
+
+
+#### self
+
+对象的方法每次被调用时，解析器都会自动传递第一个实参，一般我们会将这个参数命名为self
+
+第一个参数，就是调用方法的对象本身，
+
+​	如果调用者是p1,则第一个参数就是p1对象
+
+​	如果调用者是p2,则第一个参数就是p2对象
+
+在对象的方法中，我们是不能直接使用方法的属性的，只能通过self.属性名的方式使用
+
+```python
+class Person:
+    name = 'wjh'
+
+    def say_hello(self):
+        print("你好!%s" % self.name)  # 直接使用时报错：NameError: name 'name' is not defined. Did you mean: 'self.name'?
+
+
+p1 = Person()
+p1.name = 'laimin'
+p1.say_hello()  # 你好!laimin
+
+p2 = Person()
+p2.name = 'miaomiaomiao'
+p2.say_hello()  # 你好!miaomiaomiao
+
+p3 = Person()
+p3.say_hello()  # 你好!wjh
+```
+
+
+
+### 类的初始化init
+
+`__init__(self)`方法会在对象创建时立刻执行
+
+init函数可以用来向新创建的对象中初始化属性
+
+调用类创建对象时，类后边的所有参数都会依次传递到init()中
+
+init函数的self参数也是编译器自动传入的，它代表对象本身
+
+我们可以通过init的self参数向新建的对象中初始化属性
+
+```python
+class Person:
+
+    def __init__(self, name):
+        self.name = name
+
+    def say_hello(self):
+        print("你好!%s" % self.name)  # 直接使用时报错：NameError: name 'name' is not defined. Did you mean: 'self.name'?
+
+
+# p1 = Person() #TypeError: Person.__init__() missing 1 required positional argument: 'name'
+
+p1 = Person("张三")
+p1.say_hello()  # 你好!张三
+p2 = Person("李四")
+p2.say_hello()  # 你好!李四
+```
+
+
+
+使用init函数的好处：
+
+如果我们将设置属性值放在实例化对象之后，那很有可能有些必要属性会忘记设置，所以这种方式很适合设置必要属性，必要属性如果没设置，则对象无法创建
+
+
+
+创建对象的流程
+
+1. 创建一个变量
+2. 在内存中创建一个新对象
+3. `__init__(self)`方法执行
+4. 将对象的id赋值给变量
+
+
+
+这个地方我们要注意，类中也是可以写代码块的，类中的代码块会在类对象被创建的过程中执行的，且类体中的代码块只执行一次，而不是在每次创建类实例的适合执行，这些代码块的执行过程主要用于初始化类的属性，方法等结构，比如:
+
+```python
+class Person:
+
+    print("我是代码块")
+    def __init__(self, name):
+        self.name = name
+
+    def say_hello(self):
+        print("你好!%s" % self.name)
+
+p1 = Person("张三")
+p1.say_hello() 
+p2 = Person("李四")
+p2.say_hello()  
+'''
+我是代码块
+你好!张三
+你好!李四
+'''
+```
+
+
+
+
+
+### 类的基本结构
+
+```python
+class 类名([父类]):
+    公共的属性...
+    
+    # 对象的初始化方法
+    def __init__(self,...):
+        ...
+    
+    # 其他的方法
+    def method_1(self,...):
+        ...
+    
+    def method_2(self,...):
+        ...
+    ...
+```
+
+
+
+练习:
+
+自定义一个类叫做Cat
+
+属性:
+
+​	name,age,gender,color
+
+方法:
+
+​	catch_mouse(),eat(),meow()
+
+```python
+class Cat:
+
+    def __init__(self, name, age, gender, color):
+        self.name = name
+        self.age = age
+        self.gender = gender
+        self.color = color
+        print(f"大家好，我是{self.name},我的年龄是{self.age},我的性别是{self.gender},我的颜色是{self.color}")
+
+    def catch_mouse(self):
+        print("我在抓老鼠")
+
+    def eat(self):
+        print("我在吃喵喵粮")
+
+    def meow(self):
+        print("喵~喵~喵~喵~喵~")
+
+
+cat = Cat('喵喵喵', 3, '女', '橘色')
+cat.catch_mouse()
+cat.eat()
+cat.meow()
+'''
+大家好，我是喵喵喵,我的年龄是3,我的性别是女,我的颜色是橘色
+我在抓老鼠
+我在吃喵喵粮
+喵~喵~喵~喵~喵~
+'''
+```
+
+## 封装
+
+封装是面向对象的三大特征之一
+
+封装指的是隐藏对象中一些不希望被外部所访问到的属性或方法
+
+如何隐藏一个对象中的属性？
+
+​	将对象的属性名，修改为一个外部不知道的名字
+
+如何获取(修改)对象中的属性？
+
+​	需要提供一个getter和setter方法使外部可以访问到属性
+
+​	getter获取对象中指定属性(get_属性名)
+
+​	setter用来设置对象的指定属性(set_属性名)
+
+使用封装，确实增加了类的定义的复杂程度，但是它也确保了数据的安全
+
+1. 隐藏了属性名，使调用者无法随意的修改对象中的属性
+
+2. 增加了getter和setter方法，很好的控制属性是否是只读的
+
+   如果希望属性是只读的，则可以直接去掉setter方法
+
+   如果希望属性不能被外部访问，则可以直接去掉getter方法
+
+3. 使用setter方法设置属性，可以增加数据的验证，确保数据的值是正确的
+
+4. 使用getter方法获取属性，使用setter方法设置属性
+
+   可以在读取属性和修改属性的同时做一些其它的处理
+
+```python
+class Cat:
+
+    def __init__(self, name):
+        self._name = name
+
+    def get_name(self):
+        return self._name
+
+    def set_name(self, name):
+        self._name = name
+
+    def meow(self):
+        print(f'大家好,我是{self._name}')
+
+
+cat = Cat('喵喵喵')
+cat.set_name('张三')
+cat.meow()
+print(cat.get_name())
+
+'''
+大家好,我是张三
+张三
+'''
+```
+
+
+
+Python无法完全隐藏变量或者属性，只能用一些自欺欺人的办法，比如上面用了_name，很多地方也用__name
+
+
+
+### __隐藏属性
+
+__xx这种双下划线的方式可以隐藏对象的属性，隐藏的属性只能在类的内部访问，无法通过对象访问
+
+但是，其实这种方法也只是编译器将属性的名字改为了_类名__属性名
+
+这种方式的本质和单下划线_属性名一样，都是防君子不防小人
+
+所以为了方便，很多人还是更喜欢用单下划线
+
+```python
+class Cat:
+
+    def __init__(self, name):
+        self.__name = name
+
+    def get_name(self):
+        return self.__name
+
+    def set_name(self, name):
+        self.__name = name
+
+    def meow(self):
+        print(f'大家好,我是{self.__name}')
+
+
+cat = Cat('喵喵喵')
+cat._Cat__name = '张三'
+cat.meow()
+print(cat.get_name())
+print(cat.__name) #AttributeError: 'Cat' object has no attribute '__name'
+
+'''
+大家好,我是张三
+张三
+'''
+```
+
+
+
+   ### @property、@xx.setter
+
+get方法的装饰器:
+
+property装饰器
+
+用来将一个get方法，转换为对象的属性
+
+添加为property装饰器以后，我们就可以像调用属性一样使用get方法了
+
+**使用property装饰的方法，必须和属性名一样**
+
+
+
+set方法的装饰器: 
+
+@属性名.setter
+
+注意，这个装饰器在使用前一定要配合@property使用，要不然会报错
+
+```python
+class Cat:
+
+    def __init__(self, name):
+        self._name = name
+
+    @property
+    def name(self):
+        print("获取方法执行了")
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        print("设置方法执行了")
+        self._name = name
+
+    def meow(self):
+        print(f'大家好,我是{self._name}')
+
+
+cat = Cat('喵喵喵')
+cat.name = '李四'
+cat.name
+cat.meow()
+'''
+设置方法执行了
+获取方法执行了
+大家好,我是李四
+'''
+```
+
+
+
+## 继承
+
+通过继承可以直接让子类获取到父类的方法或属性，避免编写重复性的代码，所以我们经常需要通过继承来对一个类进行扩展
+
+继承是面向对象三大特性之一
+
+通过继承我们可以使一个类获取到其它类的属性和方法
+
+在定义类时，可以在类名后的括号中指定当前类的父类(超类，基类，super)
+
+​	子类(衍生类)可以直接继承父类中的所有的属性和方法
+
+
+
+
+
+在创建类时，如果省略了父类，则默认父类为object
+
+​	object是所有类的父类，所有类都继承自object
+
+```python
+class Animal:
+
+    def sleep(self):
+        print("动物睡觉")
+
+    def run(self):
+        print("动物跑")
+
+
+class Dog(Animal):
+    def bark(self):
+        print("狗叫")
+
+
+dog = Dog()
+dog.bark()  # 狗叫
+dog.run()  # 动物跑
+dog.sleep()  # 动物睡觉
+
+print(isinstance(dog, Dog))  # True
+print(isinstance(dog, Animal))  # True
+```
+
+
+
+### issubclass(子类名，父类名)
+
+检查一个类是否是另一个类的子类
+
+```python
+class Animal:
+
+    def sleep(self):
+        print("动物睡觉")
+
+    def run(self):
+        print("动物跑")
+
+
+class Dog(Animal):
+    def bark(self):
+        print("狗叫")
+
+
+print(issubclass(Dog, Animal))  # True
+print(issubclass(Animal, Dog))  # False
+print(isinstance(Dog, object))  # True
+print(isinstance(Animal, object))  # True
+
+dog = Dog()
+dog.bark()  # 狗叫
+dog.run()  # 动物跑
+dog.sleep()  # 动物睡觉
+
+print(isinstance(dog, Dog))  # True
+print(isinstance(dog, Animal))  # True
+print(isinstance(dog, object))  # True
+```
+
+
+
+### 重写
+
+如果在子类中如果有和父类同名的方法，则通过子类实例去调用方法时
+
+​	会调用子类的方法而不是父类的方法，这个特点我们叫做方法的重写(覆盖、override)
+
+
+
+
+
+当我们调用一个方法时，
+
+​	会优先去当前对象中寻找是否具有该方法，如果有则直接调用
+
+​	如果没有，则去当前对象的父类中寻找，如果父类中有则直接调用父类中的方法
+
+​	如果没有，则去父类的父类中寻找，以此类推，知道找到object，如果依然没有找到，则报错
+
+```python
+class A:
+    def test(self):
+        print("AAA")
+
+
+class B(A):
+    def test(self):
+        print("BBB")
+
+
+class C(B):
+    def test(self):
+        print("CCC")
+
+
+c = C()
+c.test()
+```
+
+### super()
+
+父类中所有的方法都会被子类继承，包括特殊方法，也可以重写特殊方法
+
+super方法可以用来获取当前类的父类
+
+并且通过super()返回对象调用父类方法时，不需要传递self
+
+```python
+class Animal:
+
+    def __init__(self, name):
+        self._name = name
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = name
+
+    def sleep(self):
+        print("动物睡觉")
+
+    def run(self):
+        print("动物跑")
+
+
+class Dog(Animal):
+
+    def __init__(self, name, age):
+        super().__init__(name)
+        self._age = age
+
+    @property
+    def age(self):
+        return self._age
+
+    @age.setter
+    def age(self, age):
+        self._age = age
+
+    def bark(self):
+        print("狗叫")
+
+
+dog = Dog('旺财', 18)
+print(dog.name)  # 旺财
+print(dog.age)  # 18
+```
+
+
+
+### 多重继承
+
+在Python中是支持多重继承的，也就是我们可以为一个类同时指定多个父类
+
+可以在类名的()后边添加多个类，来实现多重继承
+
+多重继承，会使子类同时拥有多个父类，并且会获取到所有父类中的方法
+
+在开发中没有特殊的情况，应该尽量避免使用多重继承，因为多重继承会让我们的代码过于复杂
+
+如果多个父类中有同名的方法，则会先在第一个父类中寻找，然后找第二个，然后找第三个。。。
+
+前边父类的方法会覆盖后边父类的方法
+
+```python
+class A:
+    def test1(self):
+        print("AAA")
+
+    def hello(self):
+        print("hello A")
+
+
+class B:
+    def test2(self):
+        print("BBB")
+
+    def hello(self):
+        print("hello B")
+
+
+class C(A, B):
+    def test(self):
+        print("CCC")
+
+
+c = C()
+c.test1()  # AAA
+c.test2()  # BBB
+c.test()  # CCC
+c.hello()  # hello A
+```
 
