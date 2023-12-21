@@ -1,3 +1,11 @@
+# Python
+
+官方文档:
+
+https://www.python.org/doc/
+
+
+
 # 基本语法
 
 ## 基本语法
@@ -5903,6 +5911,18 @@ None
 
 ## 面向对象的概念
 
+一切皆对象
+
+面向对象三大特性:
+
+封装:保护对象中的数据安全
+
+继承:保证了对象的可扩展性
+
+多态:保证了对象的灵活性
+
+
+
 
 
 ## 类 class
@@ -6704,4 +6724,1467 @@ c.test2()  # BBB
 c.test()  # CCC
 c.hello()  # hello A
 ```
+
+
+
+## 多态
+
+一个父类他具有多个子类，不同的子类在调用相同的方法，执行的时候产生不同的形态，这个叫做多态。
+
+但是由于Python的函数是没有严格的类型限制的，所以Python在多态的体现不是很严谨。在Python中，多态的体现俗称鸭子类型，
+
+即如果一个东西，走路像鸭子，叫声像鸭子，那么它就是鸭子
+
+
+
+符合多态的函数:
+
+```python
+class Dog:
+
+    def run(self):
+        print("我会跑")
+
+
+class Cat:
+
+    def run(self):
+        print("我会跑")
+
+
+def todo(meta):
+    '''
+     这个函数符合Dog,Cat的多态 
+    '''
+    meta.run()
+
+
+dog = Dog()
+cat = Cat()
+todo(dog)
+todo(cat)
+```
+
+
+
+为什么数值，字符串，序列都能作为len()函数的参数，原因是因为int,str,list类中都实现了一个叫__len__()的函数,这种设计就利用了多态的思想
+
+```python
+class Dog:
+
+    def run(self):
+        print("我会跑")
+
+    def __len__(self):
+        return 10
+
+
+class Cat:
+
+    def run(self):
+        print("我会跑")
+
+
+dog = Dog()
+cat = Cat()
+print(len(dog))  # 10
+print(len(cat))  # TypeError: object of type 'Cat' has no len()
+```
+
+
+
+## 类的属性和方法
+
+### 类属性
+
+直接在类中定义的属性是类属性
+
+​	类属性可以通过类和实例访问到
+
+​	但是类属性只能通过类对象修改，无法通过实例对象修改
+
+```python
+class Demo:
+    count = 0
+
+
+# 类属性可以通过类和实例访问
+print(Demo.count)  # 0
+demo = Demo()
+print(demo.count)  # 0
+
+# 类对象可以修改类属性
+Demo.count = 10
+print(Demo.count)  # 10
+
+# 实例对象无法修改类属性
+demo.count = 11
+print(Demo.count)  # 10
+```
+
+
+
+### 实例属性
+
+通过实例对象添加的属性属于实例属性
+
+实例属性只能通过实例对象来访问和修改，类对象无法访问修改
+
+```python
+class Demo:
+    def __init__(self):
+        self.name = '人类'
+
+
+# 实例属性只能通过实例对象来访问，类对象无法访问
+demo = Demo()
+print(demo.name)  # 人类
+# print(Demo.name)  # AttributeError: type object 'Demo' has no attribute 'name'
+
+# 实例属性只能通过实例对象来修改，类对象无法修改
+demo.name = '李四'
+print(demo.name)  # 李四
+Demo.name = '张三'
+print(demo.name)  # 李四
+```
+
+
+
+### 类方法@classmethod
+
+在类内部使用@classmethod来修饰的方法属于类方法
+
+类方法的第一个参数是cls,也会被自动传递，cls就是当前的类对象
+
+​	类方法和实例方法的区别，实例方法的第一个参数是self，而类方法的第一个参数是cls
+
+​	类方法可以通过类去调用，也可以通过实例调用，没有区别
+
+```python
+class Demo:
+
+    @classmethod
+    def hello(cls):
+        print("我是类方法", cls)
+
+
+demo = Demo()
+demo.hello()  # 我是类方法 <class '__main__.Demo'>
+Demo.hello()  # 我是类方法 <class '__main__.Demo'>
+```
+
+
+
+### 静态方法@staticmethod
+
+在类中使用@staticmethod来修饰的方法属于静态方法
+
+静态方法不需要指定任何的默认参数，静态方法可以通过类和实例去调用
+
+静态方法，基本上是一个和当前类无关的方法，它只是一个保存到当前类中的函数
+
+静态方法一般都是一些工具方法，和当前类
+
+```python
+class Demo:
+
+    @staticmethod
+    def hello():
+        print("我是静态方法")
+
+
+demo = Demo()
+demo.hello()  # 我是静态方法
+Demo.hello()  # 我是静态方法
+```
+
+### 实例方法
+
+实例方法只能由对象实例访问，类对象无法访问
+
+```python
+class Demo:
+
+    def hello(self):
+        print("我是实例方法")
+
+
+demo = Demo()
+demo.hello()  # 我是实例方法
+Demo.hello()  # TypeError: hello() missing 1 required positional argument: 'self'
+```
+
+## 垃圾回收
+
+在程序中没有被引用的对象就是垃圾，这种垃圾对象过多会影响到程序的运行的性能
+
+我们必须进行及时的垃圾回收，所谓的垃圾回收，就是将垃圾对象从内存中删除
+
+在Python中有自动的垃圾回收机制，它会自动将这些没有被引用的对象删除
+
+所以我们不用手动处理垃圾回收
+
+### del
+
+`__del__`函数会在对象被回收前调用
+
+````python
+class Demo:
+
+    def hello(self):
+        print("我是实例方法")
+
+    def __del__(self):
+        print("我要被回收了，拜拜", self)
+
+
+a = Demo()
+print("1")
+a = None
+print("2")
+'''
+1
+我要被回收了，拜拜 <__main__.Demo object at 0x10f2c07f0>
+2
+'''
+````
+
+程序结束前也会进行垃圾回收
+
+```python
+class Demo:
+
+    def hello(self):
+        print("我是实例方法")
+
+    def __del__(self):
+        print("我要被回收了，拜拜", self)
+
+
+a = Demo()
+print("1")
+print("2")
+input("按Enter拜拜")
+'''
+1
+2
+按Enter拜拜
+我要被回收了，拜拜 <__main__.Demo object at 0x103dd97f0>
+'''
+```
+
+
+
+## 特殊方法
+
+类似`__len__`，`__del__`这种，都属于对象的特殊方法，除了这些，还有些常用的特殊方法
+
+
+
+```python
+1	__init__ ( self [,args...] )
+构造函数
+简单的调用方法: obj = className(args)
+2	__del__( self )
+析构方法, 删除一个对象
+简单的调用方法 : del obj
+3	__repr__( self )
+交互模式显示的内容就是这个方法的内容
+简单的调用方法 : repr(obj)
+4	__str__( self )
+print函数显示的内容就是这个方法的内容
+简单的调用方法 : str(obj)
+5	__cmp__ ( self, x )
+对象比较
+简单的调用方法 : cmp(obj, x)
+```
+
+
+
+```python
+class Demo:
+    def __str__(self):
+        return 'hello'
+		...
+
+print(Demo()) #hello
+```
+
+## 模块化
+
+模块化，模块化指的是将一个完整的程序分解为一个一个小的模块
+
+​	通过将模块组合，来搭建一个完整的程序
+
+不采用模块化，统一将所有代码编写到一个文件中
+
+采用模块化，将程序分别编写到多个文件中
+
+模块化的优点:
+
+	1. 方便开发
+	1. 方便维护
+	1. 模块可复用
+
+
+
+在Python中一个py文件就是一个模块，要想创建模块，实际上就是创建一个python文件
+
+注意: 模块名要符合标识符的规范
+
+在一个模块中引入外部模块
+
+1. import模块名 (模块名，就是Python文件的名字，注意不要py)
+
+2. import模块名 as 模块别名
+
+   可以引入同一个模块多次，但是模块的实例只会创建一次
+
+   import可以在程序的任意位置调用，但是一般情况下，import语句都会统一写在程序的开头
+
+   在每一个模块内部都有一个`__name__`属性，通过这个属性可以获取到模块的名字
+
+   `__name__`属性值为`__main__`的模块是主模块，一个程序中只有一个主模块 
+
+   主模块就是我们直接通过python执行的模块
+
+
+
+test_model.py
+
+```python
+print('hello world')
+```
+
+main.py
+
+```python
+import test_module as test
+
+print(test.__name__)  # test_module
+print(__name__)  # __main__
+# hello world'
+```
+
+### 模块化的使用
+
+```python
+import xxx
+直接导入整个模块
+import xxx as yyy
+直接导入整个模块，给模块取别名yyy
+from xxx import yyy,zzz,fff
+导入xxx模块中的yyy,zzz,fff对象
+from xxx import *
+导入xxx模块中的所有
+from xxx import yyy as zz
+导入xxx模块中的yyy，取别名zz
+```
+
+
+
+`test_module.py`
+
+```python
+a = '张三'
+
+
+def func():
+    print("我是test模块的func方法")
+
+
+class Demo:
+    def __init__(self, name):
+        self.name = name
+```
+
+
+
+### import 模块名
+
+可以通过模块名.对象的方式获取对象
+
+`main.py`
+
+```python
+import test_module
+
+print(test_module.a)  # 张三
+test_module.func()  # 我是test模块的func方法
+demo = test_module.Demo("李四")
+print(demo.name)  # 李四
+```
+
+
+
+### import 模块名 as 别名
+
+```python
+import test_module as test
+
+print(test.a)  # 张三
+test.func()  # 我是test模块的func方法
+demo = test.Demo("李四")
+print(demo.name)  # 李四
+```
+
+
+
+### from 模块名 import 变量1，变量2，变量3...
+
+```python
+from test_module import a, func, Demo
+
+print(a)  # 张三
+func()  # 我是test模块的func方法
+demo = Demo("李四")
+print(demo.name)  # 李四
+```
+
+要注意，如果模块变量名和主函数冲突，且impor语句写在冲突语句之下，则主模块的变量会被覆盖
+
+```python
+a = 'xxx'
+from test_module import a, func, Demo
+
+
+print(a)  # 张三
+func()  # 我是test模块的func方法
+demo = Demo("李四")
+print(demo.name)  # 李四
+```
+
+### from 模块名 import *
+
+```python
+from test_module import *
+
+print(a)  # 张三
+func()  # 我是test模块的func方法
+demo = Demo("李四")
+print(demo.name)  # 李四
+```
+
+
+
+### from 模块 import 变量名 as 别名
+
+```python
+from test_module import func as test
+
+test()  # 我是test模块的func方法
+```
+
+
+
+
+
+在模块中隐藏变量
+
+添加了_ 的变量，只能在模块内部访问，在通过import * 引入时，不会引入_开头的变量
+
+但是在import 模块名的方式还是能正常导入
+
+test_module.py
+
+```python
+
+a = '张三'
+_b = '王老五'
+
+
+def func():
+    print("我是test模块的func方法")
+
+
+class Demo:
+    def __init__(self, name):
+        self.name = name
+
+```
+
+main.py
+
+```python
+from test_module import *
+
+print(a)  # 张三
+func()  # 我是test模块的func方法
+demo = Demo("李四")
+print(demo.name)  # 李四
+print(_b) #NameError: name '_b' is not defined
+```
+
+
+
+在导入的模块中编写测试代码，在主模块中不执行的办法
+
+`__name__`=='__main__'
+
+```python
+a = '张三'
+_b = '王老五'
+
+
+def func():
+    print("我是test模块的func方法")
+
+
+class Demo:
+    def __init__(self, name):
+        self.name = name
+
+
+if __name__ == '__main__':
+    # 测试代码，主函数调用时则不会执行
+    func()
+```
+
+
+
+## 包
+
+包也是一个模块
+
+当我们模块中代码过多时，或者一个模块需要被分解为多个模块时，这时就需要使用到包
+
+普通的模块就是一个py文件，而包是一个文件夹
+
+包中必须要有一个`__init__.py`的文件，这个文件中可以包含包中的主要内容
+
+
+
+`__pycache__`是模块的缓存文件
+
+py代码在执行前，需要被解析器先转换为机器码，然后再执行
+
+我们在使用模块时，也需要将模块的代码先转换为机器码然后再交由计算机执行
+
+而为了提高程序的运行性能，python会在编译过一次以后，将代码保存到一个缓存文件中
+
+这样下次加载这个模块时，就可以不再重新编译而是直接加载缓存中编译好的代码即可
+
+
+
+包的使用
+
+![](./images/003.png)
+
+
+
+
+
+`__init__.py`
+
+```python
+a = 0
+b = 1
+```
+
+`module01.py`
+
+```python
+module01 = 'hello modulo01'
+```
+
+`module02.py`
+
+```python
+module02 = 'hello modulo02'
+```
+
+`main.py`
+
+```python
+from hello import module01, module02
+
+print(module01.module01)
+print(module02.module02)
+```
+
+
+
+在Python中，当你导入一个包时，如果包含一个名为 `__init__.py` 的文件，该文件将被执行。然后，你可以从该文件中导入需要的内容，也可以继续导入包内的其他模块。
+
+假设你有如下的包结构：
+
+```
+luaCopy code
+my_package/
+|-- __init__.py
+|-- a.py
+|-- b.py
+```
+
+如果 `__init__.py` 中包含一些变量、函数或类，你可以在导入包时使用以下语法：
+
+```
+from my_package import *
+```
+
+这将执行 `__init__.py` 文件，并将其中定义的所有内容导入当前命名空间。注意，这种方式可能导致命名空间污染，不建议在生产代码中广泛使用。
+
+如果你只想导入 `__init__.py` 中的特定内容，并同时导入其他模块，可以使用以下方式：
+
+```
+from my_package import some_variable, some_function
+from my_package import a  # 导入a.py模块
+```
+
+这将导入 `__init__.py` 中的 `some_variable` 和 `some_function`，同时导入 `a.py` 模块。
+
+另一种方式是直接导入包，然后通过点号访问其中的模块或内容：
+
+```
+import my_package
+my_package.some_function()  # 调用__init__.py中的函数
+my_package.a.some_function_in_a()  # 调用a.py中的函数
+```
+
+这样可以更明确地指定要使用的内容，并且不会导入不需要的东西。
+
+
+
+##  Python标准库
+
+为了实现开箱即用的思想，Python中为我们提供了一个模块的标准库
+
+在这个标准库中，有很多强大的模块我们可以直接使用
+
+并且标准库会随Python的安装一同安装
+
+
+
+### pprint模块
+
+这个模块提供了一个pprint()方法，可以对要打印的数据做简单的格式化
+
+
+
+### sys模块
+
+这个模块可以获得Python解析器的一些信息，也可以操作Python解析器
+
+#### sys.argv
+
+获取执行代码时，命令行中所包含的参数
+
+该属性是一个列表，列表中保存了当前命令的参数
+
+```python
+import sys
+
+# 获取参数 
+print(sys.argv)
+```
+
+```shell
+MacBook-Pro:demo02 watermelon$ python3 sys_demo.py aaa bbb ccc
+['sys_demo.py', 'aaa', 'bbb', 'ccc']
+```
+
+
+
+#### sys.modules
+
+获取当前程序中引入的所有模块
+
+modules是一个字典，字典的key是模块的名字，字典的value是模块的对象
+
+```python
+import sys
+import pprint
+
+pprint.pprint(sys.modules)
+```
+
+
+
+#### sys.path
+
+他是一个列表，列表中保存的是模块搜索的路径
+
+```python
+import sys
+import pprint
+
+pprint.pprint(sys.path)
+'''
+['/Users/watermelon/workspace/python-demo/lesson009/demo02',
+ '/Users/watermelon/workspace/python-demo',
+ '/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python39.zip',
+ '/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9',
+ '/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/lib-dynload',
+ '/usr/local/lib/python3.9/site-packages']
+'''
+```
+
+#### sys.platform
+
+表示当前Python运行平台
+
+```python
+import sys
+import pprint
+
+pprint.pprint(sys.platform) #darwin 表示macOS
+
+```
+
+#### sys.exit
+
+用来退出程序
+
+```python
+import sys
+import pprint
+
+sys.exit("程序异常，结束")
+```
+
+
+
+### os模块
+
+可以对操作系统进行访问
+
+#### os.environ
+
+获取系统的环境变量
+
+#### os.system
+
+执行操作系统命令
+
+```python
+import os
+
+os.system('ls -all')
+```
+
+```shell
+MacBook-Pro:demo02 watermelon$ python3 sys_demo.py 
+total 8
+drwxr-xr-x   3 watermelon  staff   96 12 19 16:01 .
+drwxr-xr-x  22 watermelon  staff  704 12 19 15:38 ..
+-rw-r--r--   1 watermelon  staff   31 12 19 16:01 sys_demo.py
+```
+
+#### os.listdir()
+
+效果类似ls-all
+
+```python
+import os
+
+print(os.listdir("/Users/watermelon/Downloads"))
+```
+
+#### os.getcwd()
+
+获取当前的路径
+
+```python
+import os
+
+print(os.getcwd())# /Users/watermelon/workspace/python-demo/lesson011
+```
+
+#### os.chdir()
+
+切换目录
+
+```python
+import os
+
+os.chdir("/Users/watermelon/Documents")
+```
+
+#### os.mkdir()
+
+创建目录
+
+```python
+import os
+
+os.mkdir("test")
+```
+
+#### os.rmdir()
+
+删除目录
+
+```python
+import os
+
+os.rmdir("test")
+```
+
+#### os.remove()
+
+删除文件
+
+```python
+import os
+print(os.remove("./demo/test"))
+```
+
+#### os.rename()
+
+重命名
+
+```python
+import os
+os.rename("demo","demo01")
+```
+
+# 异常
+
+程序在运行过程中，不可避免的会出现一些错误，比如：
+
+使用了没有赋值过的变量
+
+使用了不存在的索引
+
+除0
+
+...
+
+这些错误在异常中，我们称其为异常
+
+程序运行过程中，一旦出现异常将会导致程序立即终止，异常以后得代码全部都不执行
+
+
+
+## 处理异常
+
+程序运行时出现异常，目的并不是让我们的程序终止
+
+Python是希望出现异常时，我们可以编写代码来对异常进行处理
+
+```python
+try:
+    代码块(可能出现错误的语句)
+except:
+    代码块(出现错误以后的处理方式)
+else:
+    代码块(没出错时要执行的语句)
+finally:
+		代码块(该代码块总会执行)    
+```
+
+其中，try是必须的，else语句有没有都行
+
+​			except和finally至少有一个
+
+
+
+可以将可能出错的代码放入try语句，这样代码如果没有错误，则会正常执行
+
+​	如果出现错误，则会执行expect子句中的代码，这样我们就可以通过代码来处理异常
+
+​	避免因为一个异常导致整个程序终止
+
+
+
+```python
+try:
+    print("开始")
+    a = 1/0
+    print("结束")
+except:
+    print("异常啦")
+else:
+    print("恭喜你，成功了")
+finally:
+    print("我必须执行")
+try:
+    print("开始")
+    a = 1/0
+    print("结束")
+except:
+    print("异常啦")
+else:
+    print("恭喜你，成功了")
+finally:
+    print("我必须执行")
+'''
+开始
+异常啦
+我必须执行
+'''
+```
+
+## 异常对象
+
+Exception是所有异常类的父类，所以如果except后跟的是Exception，他也会捕获到所有异常
+
+可以在异常类后边跟着一个as xxx，此时xx就是异常对象
+
+```python
+try:
+    # c
+    a = 1/0
+except NameError as e:
+    print("异常了",e)
+except ZeroDivisionError as e:
+    print("0除一场",e)
+except Exception as e:
+    print("我可以捕获所有异常",e)
+finally:
+    print("我必须执行")
+'''
+
+0除一场 division by zero
+我必须执行
+'''
+```
+
+
+
+## 异常的传播
+
+当在函数中出现异常时，如果在函数中对异常进行了处理，则异常不会再传播
+
+​	如果函数中没有对异常进行处理，则异常会继续向函数调用处传播
+
+​	如果函数调用处处理了异常，则不再传播，如果没有处理则继续向调用处传播
+
+​	知道传递到全局作用域（主模块）如果依然没有处理，则程序终止，并且显示异常信息
+
+
+
+当程序运行过程中出现异常以后，所有的异常信息会被保存到一个专门的异常对象中
+
+而异常传播时，实际上就是异常对象抛给了调用处
+
+比如: 
+
+ZeroDivisionError专门用来标识除0异常
+
+NameError对象专门用来处理变量错误的异常
+
+
+
+在Python中为我们提供了多个异常
+
+
+
+
+
+## 抛出异常raise
+
+`raise`  用于向外部抛出异常，后边可以跟一个异常类，或异常类的实例
+
+```python
+def division(a, b):
+    if b == 0:
+        raise Exception("除数不能是0")
+    return a / b
+
+
+division(10, 0)
+#Exception: 除数不能是0
+```
+
+
+
+## 自定义异常
+
+只要有一个类继承Exception，那这个类就属于异常类了
+
+```python
+class MyError(Exception):
+    pass
+
+
+def division(a, b):
+    if b == 0:
+        raise MyError("除数不能是0")
+    return a / b
+
+
+try:
+    division(10, 0)
+except MyError as e:
+    print("出错啦", e)
+# 出错啦 除数不能是0
+```
+
+
+
+# 文件
+
+## r关键字
+
+在Python中，`r`关键字通常用于创建原始字符串（raw strings）。原始字符串是指字符串中的反斜杠 `\` 不会被转义，而是作为普通字符对待。这在处理正则表达式、文件路径等需要使用反斜杠的场景中非常有用。
+
+例如，考虑以下字符串：
+
+```
+pythonCopy code
+path = "C:\Users\Username\Documents"
+```
+
+在上面的字符串中，`\U` 被解释为 Unicode 转义序列，但是如果我们使用原始字符串，`\` 就不会被解释为转义字符：
+
+```
+pythonCopy code
+path = r"C:\Users\Username\Documents"
+```
+
+在这个例子中，通过在字符串前面加上 `r`，我们创建了一个原始字符串，其中的 `\` 会被视为普通字符而不是转义字符。
+
+这对于处理文件路径、正则表达式等需要使用反斜杠的场景非常有用，因为它可以避免在字符串中使用大量的双反斜杠。
+
+
+
+## open 打开文件
+
+```python
+open(file, mode='r', buffering=- 1, encoding=None, errors=None, newline=None, closefd=True, opener=None)
+```
+
+用于打开文件
+
+参数:
+
+​	file:要打开的文件路径
+
+返回值:
+
+​	返回一个对象，这个对象就代表了当前打开的文件
+
+
+
+需要注意的是: 如果不填encoding时，编码可能会为None，所以最好设置默认编码为UTF-8
+
+```python
+path = "./demo/test"
+r = open(path, encoding="UTF-8")
+print(r)
+```
+
+
+
+### read()读取文件
+
+```python
+path = "./demo/test"
+r = open(path, encoding="UTF-8")
+str = r.read()
+print(str)  # hello world
+```
+
+### close 关闭文件
+
+```python
+path = "./demo/test"
+r = open(path, encoding="UTF-8")
+str = r.read()
+print(str)  # hello world
+r.close()
+
+```
+
+
+
+## with...as 语句
+
+语法:
+
+​	with open(file_name) as file_obj:
+
+​		print(file_obj.read())
+
+在with语句中可以直接使用file_obj来做文件操作
+
+此时这个文件只能在with中使用，一旦with结束文件自动close()
+
+```python
+path = "./demo/test"
+
+try:
+    with open(path, encoding="UTF-8") as file_obj:
+        str = file_obj.read()
+        print(str)
+except FileNotFoundError as e:
+    print("文件未找到", e)
+```
+
+
+
+## 读取大文件
+
+### read()
+
+通过read()读取文件内容
+
+如果直接调用read()它会将文本文件的所有内容全部读取出来
+
+​	如果要读取的文件较大的话，会一次性将文件的内容加载到内存中，容易导致内存泄露
+
+​	所以对于较大的文件，不要直接调用read()
+
+read()可以接收一个size作为参数，该参数用来指定要读取的字符的数量
+
+​	默认值为-1，它会读取文件中所有字符
+
+​	可以为size指定一个值，这样read()会读取指定数量的字符
+
+每次一次读取都是从上次读取的位置开始读取
+
+
+
+默认值为-1案例(不适合读取大文件):
+
+```python
+path = "./demo/test"
+with open(path, encoding="UTF-8") as file_obj:
+    str = file_obj.read(-1)
+    print(str)
+```
+
+
+
+指定值读取:
+
+```python
+path = "./demo/test"
+try:
+
+    with open(path, encoding="UTF-8") as file_obj:
+        content = ""
+        while True:
+            size = 6  # 每次读取的长度
+            str = file_obj.read(size)
+
+            if not str:
+                break
+            content += str
+
+        print(content)
+except FileNotFoundError as e:
+    print("文件未找到", e)
+```
+
+### readline()
+
+读取一行内容
+
+```python
+path = "./demo/test"
+try:
+
+    with open(path, encoding="UTF-8") as file_obj:
+        content = ""
+        while True:
+            str = file_obj.readline()
+
+            if not str:
+                break
+            content += str
+
+        print(content)
+except FileNotFoundError as e:
+    print("文件未找到", e)
+
+```
+
+
+
+### readlines()
+
+用于一行一行读取内容，它会一次性将读取到的内容封装到一个列表中
+
+```python
+import pprint
+
+path = "./demo/test"
+try:
+
+    with open(path, encoding="UTF-8") as file_obj:
+
+        str = file_obj.readlines()
+        pprint.pprint(str)
+
+except FileNotFoundError as e:
+    print("文件未找到", e)
+
+```
+
+
+
+### for循环读取
+
+```python
+import pprint
+
+path = "./demo/test"
+try:
+
+    with open(path, encoding="UTF-8") as file_obj:
+        for i in file_obj:
+            print(i)
+except FileNotFoundError as e:
+    print("文件未找到", e)
+```
+
+
+
+## 写入文件
+
+使用open()打开文件时必须要指定打开文件文件所要做的操作(读，写，追加)
+
+如果不指定操作类型，则默认是读取文件，而读取文件是不能向文件写入的
+
+`r` 表示只读
+
+`w` 表示可写，使用w来写入文件时，如果文件不存在会创建文件，如果文件存在则覆盖文件
+
+`a`表示追加内容，如果文件不存在会创建文件，如果文件存在则会向文件中追加内容
+
+`x`  独占的方式写入文件，如果不存在则创建并写入文件，存在则报错
+
+`+`为操作符增加功能
+
+​	`r+`	即可读又可写，文件不存在会报错
+
+​	`w+`   即可写又可读
+
+​	`a+` 即可追加内容，又可读
+
+
+
+`w`
+
+```python
+file_path = './demo/test'
+try:
+    with open(file_path, 'w', encoding='UTF-8') as file_obj:
+        file_obj.write('张三\n')
+        file_obj.write('李四\n')
+        file_obj.write('王老五\n')
+
+except FileNotFoundError as e:
+    print("文件未找到", e)
+```
+
+`r`
+
+```python
+file_path = './demo/test'
+try:
+    with open(file_path, 'r', encoding='UTF-8') as file_obj:
+        print(file_obj.read())
+
+except FileNotFoundError as e:
+    print("文件未找到", e)
+```
+
+`a`
+
+```python
+file_path = './demo/test'
+try:
+    with open(file_path, 'a', encoding='UTF-8') as file_obj:
+        print(file_obj.write('周三'))
+
+except FileNotFoundError as e:
+    print("文件未找到", e)
+```
+
+`w+`
+
+```python
+file_path = './demo/test'
+try:
+    with open(file_path, 'w+', encoding='UTF-8') as file_obj:
+        file_obj.write('周三')
+        file_obj.seek(0)
+        print(file_obj.read())
+
+except FileNotFoundError as e:
+    print("文件未找到", e)
+```
+
+`r+`
+
+```python
+file_path = './demo/test'
+try:
+    with open(file_path, 'r+', encoding='UTF-8') as file_obj:
+        file_obj.write('周三')
+        file_obj.seek(0)
+        print(file_obj.read())
+
+except FileNotFoundError as e:
+    print("文件未找到", e)
+
+```
+
+`a+`
+
+```python
+file_path = './demo/test'
+try:
+    with open(file_path, 'a+', encoding='UTF-8') as file_obj:
+        file_obj.write('周三')
+        file_obj.seek(0)
+        print(file_obj.read())
+
+except FileNotFoundError as e:
+    print("文件未找到", e)
+```
+
+x
+
+```python
+file_path = './demo/test2'
+try:
+    with open(file_path, 'x', encoding='UTF-8') as file_obj:
+        file_obj.write('周三')
+
+except FileNotFoundError as e:
+    print("文件未找到", e)
+```
+
+
+
+## 读二进制文件
+
+读取模式
+
+t 读取文本文件(默认值)
+
+b 读取二进制文件
+
+读取图片文件，将文件复制到test1.jpeg
+
+```python
+file_path = '/Users/watermelon/Pictures/ia2ibo3dorcypsypokix56gcbmkhon6z.jpeg'
+file_path1 = './demo/test1.jpeg'
+try:
+    with open(file_path, 'rb') as file_obj:
+
+        with open(file_path1, 'wb') as write_obj:
+            chunk = 1024
+            while True:
+                content = file_obj.read(1)
+                if not content:
+                    print("写完了")
+                    break
+                write_obj.write(content)
+
+except FileNotFoundError as e:
+    print("文件未找到", e)
+```
+
+## 读取文件的位置
+
+### tell()
+
+查看当前读取的位置
+
+```python
+file_path = './demo/test'
+try:
+    with open(file_path, 'r') as file_obj:
+        file_obj.read(100)
+        file_obj.read(1)
+        position = file_obj.tell()
+        print(position) # 101
+except FileNotFoundError as e:
+    print("文件未找到", e)
+```
+
+
+
+### seek()
+
+可以修改当前读取的位置
+
+seek需要两个参数
+
+第一个参数offset:要切换到的位置,即偏移量
+
+第二个参数whence: 表示文件指针的参考位置
+
+​	可选值:
+
+​		0 从头计算，默认值
+
+​		1 从当前位置计算，比如从当前位置跳跃多少个位置读取
+
+​		2 从最后位置开始计算，比如从最后一个位置向前读取多少个位置
+
+指针归零，重读
+
+```python
+file_path = './demo/test'
+try:
+    with open(file_path, 'w', encoding="UTF-8") as write_obj:
+        write_obj.write("123456789\n")
+        write_obj.write("abcdefghi\n")
+        write_obj.write("qwertyuio\n")
+        write_obj.write("asdfghjkl\n")
+        write_obj.write("zxcvbnm,.\n")
+
+    with open(file_path, 'r', encoding="UTF-8") as read_obj:
+
+        content = read_obj.read()
+        print(content)
+        read_obj.seek(0)  # 指针归零
+        content = read_obj.read()
+        print(content)
+except FileNotFoundError as e:
+    print("文件未找到", e)
+```
+
+跳跃读取:
+```python
+file_path = './demo/test'
+try:
+    with open(file_path, 'w', encoding="UTF-8") as write_obj:
+        write_obj.write("123456789\n")
+        write_obj.write("abcdefghi\n")
+        write_obj.write("qwertyuio\n")
+        write_obj.write("asdfghjkl\n")
+        write_obj.write("zxcvbnm,.\n")
+
+    with open(file_path, 'rb') as read_obj:
+        content = read_obj.read()
+        print(content)
+        read_obj.seek(9)
+        read_obj.seek(11, 1)  # 从位置9，增加11个位置，跳到位置20开始读取
+        content = read_obj.read()
+        print(content)
+except FileNotFoundError as e:
+    print("文件未找到", e)
+```
+
+从结尾位置向前读:
+```python
+file_path = './demo/test'
+try:
+    with open(file_path, 'w', encoding="UTF-8") as write_obj:
+        write_obj.write("123456789\n")
+        write_obj.write("abcdefghi\n")
+        write_obj.write("qwertyuio\n")
+        write_obj.write("asdfghjkl\n")
+        write_obj.write("zxcvbnm,.\n")
+
+    with open(file_path, 'rb') as read_obj:
+        content = read_obj.read()
+        print(content)
+        read_obj.seek(9)
+        read_obj.seek(-10, 2)  # 从结尾位置向前读10位
+        content = read_obj.read()
+        print(content)  # b'zxcvbnm,.\n'
+except FileNotFoundError as e:
+    print("文件未找到", e)
+
+```
+
+
 
