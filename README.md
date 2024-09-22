@@ -22,9 +22,9 @@ https://www.python.org/doc/
 
    Node.js用;分号区分一条语句，也可以一行是一条语句
 
-3. Python中每一行语句建议不要过长，每一行不超过80字符。
+3. Python中每一行语句建议不要过长，每一行不超过120字符。
 
-   如果一行语句需要超过80字符，建议多行书写，以\结尾换行
+   如果一行语句需要超过120字符，建议多行书写，以\结尾换行
 
    在 Java 编码规范中，通常建议每行不要超过 80 到 120 个字符。
 
@@ -250,14 +250,14 @@ boolean:
  在Python中字符串需要用引号引起来
 
 `s = 'hello'`
-s = abc 字符串必须使用银行引起来，不使用不是字符串
+s = abc 字符串必须使用引行引起来，不使用不是字符串
 引号可以是单引号也可以是双引号，但是注意不要混着用
 
 ```python
 s = 'hello'
 s = 'hello'
 
-s = 'hello" #银行不能混着用,要不然会报SyntaxError: unterminated string literal
+s = 'hello" #引号不能混着用,要不然会报SyntaxError: unterminated string literal
 
 
 ```
@@ -500,7 +500,7 @@ Python 是一门面向对象的编程语言
 
   对象的id就相当于人的身份证号一样
 
-  可以通过id()函数来u查看对象
+  可以通过id()函数来查看对象
 
   id是由解析器生成的，在CPython中，id就是对象的内存地址
 
@@ -4181,6 +4181,8 @@ b id: 4455717168
 
 其它高级对象在函数中传递时，传递的是对象的地址，也称为传递的是对象的引用，所以在函数里面修改变量的值会影响函数外的变量
 
+
+
 ```python
 def update_list(a):
     a[1] = 10
@@ -4190,6 +4192,24 @@ list = [1, 2, 3, 4]
 update_list(list)
 print(list)
 ```
+
+```python
+
+person = {'name': '李四', 'age': 18}
+
+
+def update_name(p):
+    p['name'] = '张三'
+    # p = {'name1': '李四1', 'age1': 181}
+    print(p)
+
+
+update_name(person)
+print(person)
+
+```
+
+![](./images/004.png)
 
 
 
@@ -7359,6 +7379,28 @@ my_package.a.some_function_in_a()  # 调用a.py中的函数
 
 这个模块提供了一个pprint()方法，可以对要打印的数据做简单的格式化
 
+```python
+from pprint import pprint
+
+_person = {
+    "code": 0,
+    "message": "0",
+    "ttl": 1,
+    "data": {
+        "seid": "11482934631497239006",
+        "id": 8921248570750262572,
+        "type": 0,
+        "show_name": "钟薛高创始人称卖红薯也要还债",
+        "name": "钟薛高创始人称卖红薯也要还债",
+        "goto_type": 0,
+        "goto_value": "",
+        "url": "https://search.bilibili.com/all?keyword=钟薛高创始人称卖红薯也要还债"
+    }
+}
+
+pprint(_person)
+```
+
 
 
 ### sys模块
@@ -7538,6 +7580,194 @@ import os
 os.rename("demo","demo01")
 ```
 
+### JSON模块
+
+JSON是一种轻量级的数据交换格式，它易于人类阅读和编写，几乎所有语言都能读取json格式的字符串，所以它是一种语言无关的数据格式
+
+JSON格式字符串可分为这几类
+
+#### 字典型(对象型)
+
+```json
+{
+  "name": "Alice",
+  "age": 25,
+  "gender": true,
+  "skill": null
+}
+```
+
+#### 序列型(数组型)
+
+```json
+[
+  "apple",
+  "banana",
+  "cherry"
+]
+```
+
+#### 嵌套型
+
+对象嵌数组，对象嵌对象
+
+```json
+{
+  "name": "John",
+  "age": 30,
+  "isStudent": false,
+  "skills": ["Python", "JavaScript", "Java"],
+  "address": {
+    "street": "123 Main St",
+    "city": "New York",
+    "zipCode": "10001"
+  }
+}
+```
+数组嵌对象
+
+```json
+[
+  {
+    "name": "Alice",
+    "age": 25,
+    "hobbies": ["reading", "hiking"]
+  },
+  {
+    "name": "Bob",
+    "age": 30,
+    "hobbies": ["cooking", "cycling"]
+  }
+]
+```
+
+数组嵌数组
+
+```json
+{
+  "fruits": [
+    [
+      "apple",
+      "banana",
+      "orange"
+    ],
+    [
+      "strawberry",
+      "blueberry",
+      "raspberry"
+    ]
+  ]
+}
+```
+
+
+
+#### JSON与Python的list和dict的区别
+
+JSON 是一种文本格式，适合数据交换；而 Python 的 `list` 和 `dict` 是语言内置的数据结构对象，适合数据处理。
+
+JSON中，如果一个key的value为空，则value应该为null，而python中，如果一个dict的key的value为空，则value应该为None
+
+JSON的key一定是双引号，Python定义dict时,key可以是单引号括起来的字符串，也可以是双引号括起来的字符串
+
+
+
+#### 将json字符串转成python对象
+
+```python
+import json
+
+json_string = '{"name": "Alice", "age": 25}'
+data = json.loads(json_string)
+print(data)  # 输出: {'name': 'Alice', 'age': 25}
+```
+
+#### 读取文件(文件内部是json格式的字符串)转成python对象
+
+```python
+import json
+
+with open('data.txt', 'r') as file:
+    data = json.load(file)
+print(data)  # 输出:
+```
+
+
+
+#### 将python对象转成json字符串
+
+```python
+import json
+
+data = {'name': 'Alice', 'age': 25}
+json_string = json.dumps(data)
+print(json_string)  # 输出: '{"name": "Alice", "age": 25}'
+```
+
+将python对象转成文件(内容是json格式字符串)
+
+```python
+import json
+
+data = {'name': 'Alice', 'age': 25}
+with open('data.json', 'w') as file:
+    json.dump(data, file)
+# 这样会将 {'name': 'Alice', 'age': 25} 写入 data.json 文件中
+```
+
+### CSV模块
+
+#### 概念
+
+**CSV**（Comma-Separated Values，逗号分隔值）是一种用于存储表格数据的简单文件格式，常用于数据交换(和JSON一样)。CSV 文件将数据按行组织，每行包含多个字段，字段之间用逗号（`,`）分隔。
+
+CSV 格式的特点：
+
+1. **简单易读**：每一行表示一条记录，字段用逗号分隔，适合存储结构化的数据。
+2. **文本格式**：CSV 文件是纯文本文件，容易生成和处理，广泛用于数据传输和导入导出。
+3. **跨平台兼容**：几乎所有的数据处理工具（如 Excel、数据库系统、编程语言）都支持读取和写入 CSV 文件。
+
+```csv
+Name,Age,Grade
+Alice,25,A
+Bob,23,B
+Charlie,22,C
+```
+
+**第一行**：通常是标题行，用于说明每列数据的含义（字段名称）。
+
+**后续行**：每行表示一条记录，字段之间用逗号分隔。
+
+#### 读取csv
+
+```python
+import csv
+
+with open('students.csv', newline='') as csvfile:
+    reader = csv.reader(csvfile)
+    for row in reader:
+        print(row)
+```
+
+
+
+#### 写入csv
+
+```python
+import csv
+
+data = [
+    ["Name", "Age", "Grade"],
+    ["Alice", 25, "A"],
+    ["Bob", 23, "B"],
+    ["Charlie", 22, "C"]
+]
+
+with open('students.csv', 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerows(data)
+```
+
 # 异常
 
 程序在运行过程中，不可避免的会出现一些错误，比如：
@@ -7598,16 +7828,7 @@ else:
     print("恭喜你，成功了")
 finally:
     print("我必须执行")
-try:
-    print("开始")
-    a = 1/0
-    print("结束")
-except:
-    print("异常啦")
-else:
-    print("恭喜你，成功了")
-finally:
-    print("我必须执行")
+
 '''
 开始
 异常啦
@@ -7650,7 +7871,7 @@ finally:
 
 ​	如果函数调用处处理了异常，则不再传播，如果没有处理则继续向调用处传播
 
-​	知道传递到全局作用域（主模块）如果依然没有处理，则程序终止，并且显示异常信息
+​	直到传递到全局作用域（主模块）如果依然没有处理，则程序终止，并且显示异常信息
 
 
 
@@ -7826,17 +8047,17 @@ except FileNotFoundError as e:
 
 ​	所以对于较大的文件，不要直接调用read()
 
-read()可以接收一个size作为参数，该参数用来指定要读取的字符的数量
+read()可以接收一个n作为参数，该参数用来指定要读取的字符的数量
 
 ​	默认值为-1，它会读取文件中所有字符
 
-​	可以为size指定一个值，这样read()会读取指定数量的字符
+​	可以为n指定一个值，这样read()会读取指定数量的字符
 
 每次一次读取都是从上次读取的位置开始读取
 
 
 
-默认值为-1案例(不适合读取大文件):
+默认值为-1案例(不适 ):
 
 ```python
 path = "./demo/test"
@@ -8187,4 +8408,68 @@ except FileNotFoundError as e:
 ```
 
 
+
+## 网络编程
+
+### http理论
+
+#### 概念
+
+协议:  协议就是游戏规则，比如斗地主，顺序是一个人出一次牌，出的牌可以比大小
+
+HTTP 是一种用来在客户端（通常是浏览器）和服务器之间通信的协议。它就像是一种“语言”，客户端用这种语言向服务端发送信息，服务器用同样的语言进行回应。
+
+HTTP请求: 客户端向服务端发送信息，就叫做HTTP请求，服务端向客户端回复信息，就叫做HTTP响应
+
+例子：
+
+你可以把 HTTP 请求想象成餐厅的点餐流程：
+
+- 你（客户端）到餐厅（服务器）点菜（请求）。
+- 服务员（服务器）接收到你的订单后，把你点的菜送到厨房（后台处理）。
+- 厨师做好后，服务员把食物（响应）送到你桌子上。
+
+#### http请求的结构介绍
+
+当你在浏览器中输入网址时，浏览器就是在向服务器发送 HTTP 请求。一个 HTTP 请求包含以下几个部分：
+
+- **URL（统一资源定位符）**：这是你访问的地址，例如 `http://example.com`。
+
+  - **统一资源定位符**，简称 **URL**，是互联网上的一个“地址”。你可以把它想象成一个邮寄信件时需要写的详细地址，它告诉电脑或手机要去哪里找到你想要的东西。
+
+    ### URL 由几个部分组成：
+
+    1. **协议部分**：告诉电脑要用什么规则去访问这个地址。常见的有：
+       - `http://` 或 `https://`，表示用浏览网页的方式访问。
+    2. **域名部分**：就像一个网站的名字，告诉你要去哪个网站。比如：
+       - `www.google.com` 就是谷歌的网站。
+    3. **路径部分**：告诉你在这个网站的哪个地方可以找到你想要的内容。比如：
+       - `/images/cat.jpg` 表示在网站上找一张猫的图片。
+
+    ### 举个例子：
+
+    ```
+    https://www.example.com/articles/123
+    ```
+
+    - **https://** 是访问这个网址的协议。
+    - **[www.example.com](http://www.example.com)** 是网站的域名。
+    - **/articles/123** 是网站里具体的一篇文章的位置。
+
+    所以，URL 就是告诉电脑要去哪、怎么去、去拿什么东西的一个“地址”。
+
+- 方法（Method）
+
+- 请求的类型，常见的有GET和POST
+
+  - `GET`：像是点餐时说“我要看菜单”（请求信息）。
+  - `POST`：像是告诉服务员“我点了这道菜”（发送信息）。
+
+- **头部（Headers）**：额外的信息，比如你的身份、浏览器的类型等。
+
+- **数据（Body）**：POST 请求时，发送给服务器的数据。
+
+### requests模块
+
+https://www.runoob.com/python3/python-requests.html
 

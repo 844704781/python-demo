@@ -6,7 +6,7 @@
 $ENV:ALL_PROXY ='http://127.0.0.1:7890'
 ```
 
-
+https://pypi.org/project/pip/
 
 ## anaconda
 
@@ -385,7 +385,7 @@ c:\Users\watermelon\AppData\Local\Programs\cursor\resources\app\bin;C:\Python312
 ### 退出虚拟环境
 
 ```shell
-deactivate
+    deactivate
 ```
 
 
@@ -408,4 +408,32 @@ pip install -r requirments.txt
 ```
 
 
+
+
+
+
+
+## 总结
+
+创建项目的步骤
+
+```shell
+mkdir myproject
+python -m venv .venv
+cd .venv/bin/
+source activate
+cd ../../
+pip install xxx -i xxxxx
+pip list
+pip freeze > requirements.txt
+pip install -r requirements.txt -i xxx
+```
+
+安装python的步骤
+
+```shell
+1. 安装anaconda软件，可以图形化，也可以命令行
+2. conda create -n conda_demo python=3.8 
+3. conda activate conda_demo
+```
 
